@@ -349,7 +349,11 @@ class VideoExportEngine(
 
                             val frameRectHandle = GLES20.glGetUniformLocation(programToUse, "u_FrameRect")
                             if (frameRectHandle >= 0) {
-                                val rect = blurConfig.frameRect
+                                val rect = if (!config.faceTrackKeyframes.isNullOrEmpty()) {
+                                    com.techvertex.obscura.core.video.face.VideoFaceScanner.getInterpolatedFaceRect(currentTimeMs, config.faceTrackKeyframes) ?: blurConfig.frameRect
+                                } else {
+                                    blurConfig.frameRect
+                                }
                                 val vb = blurConfig.videoBounds
                                 val vbW = vb.width().coerceAtLeast(0.001f)
                                 val vbH = vb.height().coerceAtLeast(0.001f)

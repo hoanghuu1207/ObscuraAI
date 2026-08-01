@@ -8,6 +8,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.techvertex.obscura.core.video.export.VideoExportConfig
 import com.techvertex.obscura.core.video.export.VideoExportEngine
+import com.techvertex.obscura.core.video.face.TimedFaceRect
+import com.techvertex.obscura.core.video.face.VideoFaceScanner
 import com.techvertex.obscura.core.video.model.BlurVideoConfig
 import com.techvertex.obscura.core.video.model.FrameRatio
 import com.techvertex.obscura.core.video.model.VideoBlurConstants
@@ -36,7 +38,11 @@ data class BlurVideoUiState(
     val activeTab: BlurVideoTab = BlurVideoTab.FRAME,
     val exportProgress: Int = -1,
     val exportResult: String? = null,
-    val isShowOriginal: Boolean = false
+    val isShowOriginal: Boolean = false,
+    val isScanningFaces: Boolean = false,
+    val scanProgress: Int = -1,
+    val isAutoFaceTrackEnabled: Boolean = false,
+    val timedFaceRects: List<TimedFaceRect> = emptyList()
 )
 
 @HiltViewModel
@@ -79,7 +85,10 @@ class BlurVideoViewModel @Inject constructor() : ViewModel() {
 
     fun updateFramePosition(rect: RectF) {
         _uiState.update { state ->
-            state.copy(blurConfig = state.blurConfig.copy(frameRect = RectF(rect)))
+            state.copy(
+                blurConfig = state.blurConfig.copy(frameRect = RectF(rect)),
+                isAutoFaceTrackEnabled = false // Manual drag overrides auto face track
+            )
         }
     }
 
@@ -100,7 +109,16 @@ class BlurVideoViewModel @Inject constructor() : ViewModel() {
     }
 
     fun setCurrentPosition(positionMs: Long) {
-        _uiState.update { it.copy(currentPosition = positionMs) }
+        _uiState.update { state ->
+            var updatedConfig = state.blurConfig
+            if (state.isAutoFaceTrackEnabled && state.timedFaceRects.isNotEmpty()) {
+                val interpolated = VideoFaceScanner.getInterpolatedFaceRect(positionMs, state.timedFaceRects)
+                if (interpolated != null) {
+                    updatedConfig = updatedConfig.copy(frameRect = interpolated)
+                }
+            }
+            state.copy(currentPosition = positionMs, blurConfig = updatedConfig)
+        }
     }
 
     fun setIsPlaying(playing: Boolean) {
@@ -109,6 +127,41 @@ class BlurVideoViewModel @Inject constructor() : ViewModel() {
 
     fun setShowOriginal(show: Boolean) {
         _uiState.update { it.copy(isShowOriginal = show) }
+    }
+
+    fun scanFacesForAutoBlur(context: Context, videoUri: Uri) {
+        if (_uiState.value.isScanningFaces) return
+
+        _uiState.update { it.copy(isScanningFaces = true, scanProgress = 0) }
+
+        viewModelScope.launch(Dispatchers.IO) {
+            val scanner = VideoFaceScanner(context.applicationContext)
+            val rects = scanner.scanVideoForFaces(videoUri) { progress ->
+                _uiState.update { it.copy(scanProgress = progress) }
+            }
+
+            withContext(Dispatchers.Main) {
+                _uiState.update { state ->
+                    val updatedConfig = if (rects.isNotEmpty()) {
+                        val firstFace = rects.first().rect
+                        state.blurConfig.copy(frameRect = firstFace)
+                    } else state.blurConfig
+
+                    state.copy(
+                        isScanningFaces = false,
+                        scanProgress = -1,
+                        timedFaceRects = rects,
+                        isAutoFaceTrackEnabled = rects.isNotEmpty()
+                    )
+                }
+            }
+        }
+    }
+
+    fun toggleAutoFaceTrack() {
+        _uiState.update { state ->
+            state.copy(isAutoFaceTrackEnabled = !state.isAutoFaceTrackEnabled)
+        }
     }
 
     fun saveCurrentStateForUndo() {
@@ -157,7 +210,8 @@ class BlurVideoViewModel @Inject constructor() : ViewModel() {
             val exportConfig = VideoExportConfig(
                 inputUri = videoUri,
                 outputPath = "",
-                blurConfigs = listOf(_uiState.value.blurConfig)
+                blurConfigs = listOf(_uiState.value.blurConfig),
+                faceTrackKeyframes = if (_uiState.value.isAutoFaceTrackEnabled) _uiState.value.timedFaceRects else null
             )
 
             exportEngine = VideoExportEngine(

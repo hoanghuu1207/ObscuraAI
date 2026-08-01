@@ -78,4 +78,7 @@ dependencies {
     // Media3 ExoPlayer
     implementation(libs.androidx.media3.exoplayer)
     implementation(libs.androidx.media3.ui)
+
+    // ML Kit Face Detection
+    implementation(libs.mlkit.face.detection)
 }

@@ -8,4 +8,5 @@ data class VideoExportConfig(
     val outputPath: String,
     val blurConfigs: List<BlurVideoConfig>,
     val keepOriginalResolution: Boolean = true,
+    val faceTrackKeyframes: List<com.techvertex.obscura.core.video.face.TimedFaceRect>? = null
 )

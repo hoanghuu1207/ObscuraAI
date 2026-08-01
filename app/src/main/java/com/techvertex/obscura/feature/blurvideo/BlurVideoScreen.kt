@@ -2,7 +2,6 @@ package com.techvertex.obscura.feature.blurvideo
 
 import android.Manifest
 import android.content.pm.PackageManager
-import android.net.Uri
 import android.os.Build
 import android.widget.FrameLayout
 import android.widget.Toast
@@ -29,6 +28,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
+import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Face
 import androidx.compose.material.icons.filled.PlayArrow
@@ -67,6 +67,7 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.core.content.ContextCompat
+import androidx.core.net.toUri
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
@@ -92,7 +93,7 @@ fun BlurVideoScreen(
 ) {
     val context = LocalContext.current
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    val videoUri = remember(videoUriStr) { Uri.parse(videoUriStr) }
+    val videoUri = remember(videoUriStr) { videoUriStr.toUri() }
 
     val videoPlayer = remember { BlurVideoPlayer(context) }
     var glSurfaceView by remember { mutableStateOf<BlurVideoGLSurfaceView?>(null) }
@@ -105,13 +106,20 @@ fun BlurVideoScreen(
         if (isGranted) {
             viewModel.startExport(context, videoUri)
         } else {
-            Toast.makeText(context, "Storage permission is required to save video", Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                context,
+                "Storage permission is required to save video",
+                Toast.LENGTH_SHORT
+            ).show()
         }
     }
 
     val requestSaveVideo = {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q ||
-            ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
+            ContextCompat.checkSelfPermission(
+                context,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+            ) == PackageManager.PERMISSION_GRANTED
         ) {
             viewModel.startExport(context, videoUri)
         } else {
@@ -128,9 +136,11 @@ fun BlurVideoScreen(
                     videoPlayer.pause()
                     glSurfaceView?.onPause()
                 }
+
                 Lifecycle.Event.ON_RESUME -> {
                     glSurfaceView?.onResume()
                 }
+
                 else -> {}
             }
         }
@@ -277,36 +287,69 @@ fun BlurVideoScreen(
                     }
                 }
 
-                // Hold to Compare Original Video
-                Box(
-                    modifier = Modifier
-                        .clip(RoundedCornerShape(20.dp))
-                        .background(Gray334155)
-                        .pointerInput(Unit) {
-                            detectTapGestures(
-                                onPress = {
-                                    viewModel.setShowOriginal(true)
-                                    tryAwaitRelease()
-                                    viewModel.setShowOriginal(false)
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    // Auto Face Detect Button
+                    Box(
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(20.dp))
+                            .background(if (uiState.isAutoFaceTrackEnabled) Purple6366F1 else Gray334155)
+                            .clickable {
+                                if (uiState.timedFaceRects.isEmpty()) {
+                                    viewModel.scanFacesForAutoBlur(context, videoUri)
+                                } else {
+                                    viewModel.toggleAutoFaceTrack()
                                 }
+                            }
+                            .padding(horizontal = 12.dp, vertical = 6.dp)
+                    ) {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Icon(
+                                imageVector = Icons.Default.Face,
+                                contentDescription = "Auto Face Blur",
+                                tint = Color.White,
+                                modifier = Modifier.size(16.dp)
+                            )
+                            Spacer(modifier = Modifier.width(4.dp))
+                            Text(
+                                text = if (uiState.isAutoFaceTrackEnabled) "Auto Face: ON" else "Auto Face",
+                                color = Color.White,
+                                fontSize = 12.sp,
+                                fontWeight = FontWeight.SemiBold
                             )
                         }
-                        .padding(horizontal = 12.dp, vertical = 6.dp)
-                ) {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Icon(
-                            imageVector = Icons.Default.Face,
-                            contentDescription = "Original",
-                            tint = Color.White,
-                            modifier = Modifier.size(16.dp)
-                        )
-                        Spacer(modifier = Modifier.width(4.dp))
-                        Text(
-                            text = "Hold Original",
-                            color = Color.White,
-                            fontSize = 12.sp,
-                            fontWeight = FontWeight.Medium
-                        )
+                    }
+
+                    // Hold to Compare Original Video
+                    Box(
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(20.dp))
+                            .background(Gray334155)
+                            .pointerInput(Unit) {
+                                detectTapGestures(
+                                    onPress = {
+                                        viewModel.setShowOriginal(true)
+                                        tryAwaitRelease()
+                                        viewModel.setShowOriginal(false)
+                                    }
+                                )
+                            }
+                            .padding(horizontal = 12.dp, vertical = 6.dp)
+                    ) {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Icon(
+                                imageVector = Icons.Default.AccountCircle,
+                                contentDescription = "Original",
+                                tint = Color.White,
+                                modifier = Modifier.size(16.dp)
+                            )
+                            Spacer(modifier = Modifier.width(4.dp))
+                            Text(
+                                text = "Hold Original",
+                                color = Color.White,
+                                fontSize = 12.sp,
+                                fontWeight = FontWeight.Medium
+                            )
+                        }
                     }
                 }
             }
@@ -512,6 +555,47 @@ fun BlurVideoScreen(
                     isSelected = uiState.activeTab == BlurVideoTab.BLUR_STYLE,
                     onClick = { viewModel.setActiveTab(BlurVideoTab.BLUR_STYLE) }
                 )
+            }
+        }
+    }
+
+    // 6.5. Face Scanning Dialog
+    if (uiState.isScanningFaces) {
+        Dialog(
+            onDismissRequest = {},
+            properties = DialogProperties(
+                dismissOnBackPress = false,
+                dismissOnClickOutside = false
+            )
+        ) {
+            Surface(
+                shape = RoundedCornerShape(16.dp),
+                color = Blue1E293B,
+                modifier = Modifier.padding(16.dp)
+            ) {
+                Column(
+                    modifier = Modifier.padding(24.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    CircularProgressIndicator(
+                        color = Purple6366F1,
+                        modifier = Modifier.size(48.dp)
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Text(
+                        text = "AI Face Scanning... ${uiState.scanProgress}%",
+                        color = Color.White,
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(
+                        text = "Detecting & tracking face keyframes",
+                        color = Gray94A3B8,
+                        fontSize = 12.sp
+                    )
+                }
             }
         }
     }
