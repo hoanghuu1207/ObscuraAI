@@ -19,5 +19,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "BlurVision"
+rootProject.name = "Obscura"
 include(":app")

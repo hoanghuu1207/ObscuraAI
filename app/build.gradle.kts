@@ -8,17 +8,17 @@ plugins {
 }
 
 android {
-    namespace = "com.techvertex.blurvision"
+    namespace = "com.techvertex.obscura"
     compileSdk {
         version = release(36)
     }
 
     defaultConfig {
-        applicationId = "com.techvertex.blurvision"
+        applicationId = "com.techvertex.obscura"
         minSdk = 24
         targetSdk = 36
         versionCode = 1
-        versionName = "1.0.0"
+        versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
