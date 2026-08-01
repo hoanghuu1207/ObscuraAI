@@ -4,9 +4,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
+import com.techvertex.obscura.feature.blurvideo.BlurVideoScreen
+import com.techvertex.obscura.feature.blurvideo.BlurVideoViewModel
 import com.techvertex.obscura.feature.home.HomeScreen
 import com.techvertex.obscura.feature.home.HomeViewModel
 import com.techvertex.obscura.feature.intro.IntroScreen
@@ -19,6 +23,9 @@ sealed class Screen(val route: String) {
     data object Intro : Screen("intro")
     data object Home : Screen("home")
     data object Details : Screen("details")
+    data object BlurVideo : Screen("blur_video/{videoUri}") {
+        fun createRoute(videoUri: String) = "blur_video/$videoUri"
+    }
 }
 
 @Composable
@@ -67,11 +74,30 @@ fun AppNavHost(
                 viewModel = homeViewModel,
                 onNavigateToDetails = { item ->
                     // Navigate to details screen
+                },
+                onNavigateToBlurVideo = { videoUri ->
+                    navController.navigate(Screen.BlurVideo.createRoute(videoUri))
                 }
             )
         }
+
+        composable(
+            route = Screen.BlurVideo.route,
+            arguments = listOf(navArgument("videoUri") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val videoUriStr = backStackEntry.arguments?.getString("videoUri") ?: ""
+            val blurVideoViewModel: BlurVideoViewModel = hiltViewModel()
+            BlurVideoScreen(
+                videoUriStr = videoUriStr,
+                viewModel = blurVideoViewModel,
+                onNavigateBack = {
+                    navController.popBackStack()
+                }
+            )
+        }
+
         composable(Screen.Details.route) {
-            //
+            // Details screen
         }
     }
 }
