@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1066556796776",
+    "project_id": "obscuraai-42e98",
+    "storage_bucket": "obscuraai-42e98.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1066556796776:android:beb937e12fa2a5756430dd",
+        "android_client_info": {
+          "package_name": "com.techvertex.obscura"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBAVXaiIoPi7cTnvfRBm2eBTqV4xMSYBHc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

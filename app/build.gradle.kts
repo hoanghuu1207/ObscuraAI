@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.hilt)
     alias(libs.plugins.crashlytics)
     alias(libs.plugins.kotlin.ksp)
+    alias(libs.plugins.google.services)
 }
 
 android {
@@ -82,4 +83,9 @@ dependencies {
 
     // ML Kit Face Detection
     implementation(libs.mlkit.face.detection)
+
+    // Firebase
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.analytics)
+    implementation(libs.firebase.crashlytics)
 }
