@@ -236,6 +236,13 @@ fun BlurVideoScreen(
                                         viewModel.setIsPlaying(isPlaying)
                                     }
                                 }
+                                addOnLayoutChangeListener { _, left, top, right, bottom, _, _, _, _ ->
+                                    val w = right - left
+                                    val h = bottom - top
+                                    if (w > 0 && h > 0) {
+                                        viewModel.setSurfaceSize(w, h)
+                                    }
+                                }
                             }
                             glSurfaceView = surfaceView
                             addView(surfaceView)

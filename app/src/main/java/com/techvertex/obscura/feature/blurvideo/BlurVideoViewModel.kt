@@ -59,11 +59,21 @@ class BlurVideoViewModel @Inject constructor() : ViewModel() {
     var videoHeight: Int = 0
         private set
 
+    var surfaceWidth: Int = 0
+        private set
+    var surfaceHeight: Int = 0
+        private set
+
     private var exportEngine: VideoExportEngine? = null
 
     fun setVideoSize(width: Int, height: Int) {
         videoWidth = width
         videoHeight = height
+    }
+
+    fun setSurfaceSize(width: Int, height: Int) {
+        surfaceWidth = width
+        surfaceHeight = height
     }
 
     fun setActiveTab(tab: BlurVideoTab) {
@@ -114,7 +124,15 @@ class BlurVideoViewModel @Inject constructor() : ViewModel() {
             if (state.isAutoFaceTrackEnabled && state.timedFaceRects.isNotEmpty()) {
                 val interpolated = VideoFaceScanner.getInterpolatedFaceRect(positionMs, state.timedFaceRects)
                 if (interpolated != null) {
-                    updatedConfig = updatedConfig.copy(frameRect = interpolated)
+                    val viewRect = VideoFaceScanner.convertVideoRectToViewRect(
+                        interpolated,
+                        videoWidth,
+                        videoHeight,
+                        surfaceWidth,
+                        surfaceHeight,
+                        state.blurConfig.rotationDegrees
+                    )
+                    updatedConfig = updatedConfig.copy(frameRect = viewRect)
                 }
             }
             state.copy(currentPosition = positionMs, blurConfig = updatedConfig)
@@ -143,7 +161,14 @@ class BlurVideoViewModel @Inject constructor() : ViewModel() {
             withContext(Dispatchers.Main) {
                 _uiState.update { state ->
                     val updatedConfig = if (rects.isNotEmpty()) {
-                        val firstFace = rects.first().rect
+                        val firstFace = VideoFaceScanner.convertVideoRectToViewRect(
+                            rects.first().rect,
+                            videoWidth,
+                            videoHeight,
+                            surfaceWidth,
+                            surfaceHeight,
+                            state.blurConfig.rotationDegrees
+                        )
                         state.blurConfig.copy(frameRect = firstFace)
                     } else state.blurConfig
 

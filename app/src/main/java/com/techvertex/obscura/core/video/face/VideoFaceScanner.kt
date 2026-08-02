@@ -34,13 +34,56 @@ class VideoFaceScanner(private val context: Context) {
                     val left = current.rect.left + factor * (next.rect.left - current.rect.left)
                     val top = current.rect.top + factor * (next.rect.top - current.rect.top)
                     val right = current.rect.right + factor * (next.rect.right - current.rect.right)
-                    val bottom = current.rect.bottom + factor * (next.rect.bottom - current.rect.bottom)
+                    val bottom =
+                        current.rect.bottom + factor * (next.rect.bottom - current.rect.bottom)
 
                     return RectF(left, top, right, bottom)
                 }
             }
 
             return timedRects.last().rect
+        }
+
+        fun convertVideoRectToViewRect(
+            videoRect: RectF,
+            videoWidth: Int,
+            videoHeight: Int,
+            surfaceWidth: Int,
+            surfaceHeight: Int,
+            rotationDeg: Int = 0
+        ): RectF {
+            if (videoWidth <= 1 || videoHeight <= 1 || surfaceWidth <= 1 || surfaceHeight <= 1) return videoRect
+
+            val rotW = if (rotationDeg == 90 || rotationDeg == 270) videoHeight.toFloat() else videoWidth.toFloat()
+            val rotH = if (rotationDeg == 90 || rotationDeg == 270) videoWidth.toFloat() else videoHeight.toFloat()
+
+            val videoAspect = rotW / rotH
+            val surfaceAspect = surfaceWidth.toFloat() / surfaceHeight.toFloat()
+
+            var vidLeft = 0f
+            var vidTop = 0f
+            var vidRight = 1f
+            var vidBottom = 1f
+
+            if (videoAspect > surfaceAspect) {
+                val displayH = surfaceAspect / videoAspect
+                vidTop = (1f - displayH) / 2f
+                vidBottom = (1f + displayH) / 2f
+            } else {
+                val displayW = videoAspect / surfaceAspect
+                vidLeft = (1f - displayW) / 2f
+                vidRight = (1f + displayW) / 2f
+            }
+
+            val vidW = vidRight - vidLeft
+            val vidH = vidBottom - vidTop
+
+            return RectF(
+                (vidLeft + videoRect.left * vidW).coerceIn(0f, 1f),
+                (vidTop + videoRect.top * vidH).coerceIn(0f, 1f),
+                (vidLeft + videoRect.right * vidW).coerceIn(0f, 1f),
+                (vidTop + videoRect.bottom * vidH).coerceIn(0f, 1f)
+            )
         }
     }
 
@@ -65,10 +108,12 @@ class VideoFaceScanner(private val context: Context) {
             var currentTimeMs = 0L
             val totalSteps = (durationMs / SAMPLE_INTERVAL_MS).toInt().coerceAtLeast(1)
             var currentStep = 0
+            var lastFaceRect: RectF? = null
 
             while (currentTimeMs <= durationMs) {
                 val timeUs = currentTimeMs * 1000L
-                val bitmap = retriever.getFrameAtTime(timeUs, MediaMetadataRetriever.OPTION_CLOSEST_SYNC)
+                val bitmap = retriever.getFrameAtTime(timeUs, MediaMetadataRetriever.OPTION_CLOSEST)
+                    ?: retriever.getFrameAtTime(timeUs, MediaMetadataRetriever.OPTION_CLOSEST_SYNC)
 
                 if (bitmap != null) {
                     val scaledBitmap = scaleBitmapIfNeeded(bitmap, 480)
@@ -80,9 +125,22 @@ class VideoFaceScanner(private val context: Context) {
                     bitmap.recycle()
 
                     if (detectedFaces.isNotEmpty()) {
-                        // Take the primary/first detected face
-                        val primaryFace = detectedFaces.first()
-                        timedRects.add(TimedFaceRect(currentTimeMs, primaryFace))
+                        val prev = lastFaceRect
+                        val selectedFace = if (prev == null) {
+                            detectedFaces.first()
+                        } else {
+                            val prevCenterX = prev.centerX()
+                            val prevCenterY = prev.centerY()
+                            detectedFaces.minByOrNull { f ->
+                                val dx = f.centerX() - prevCenterX
+                                val dy = f.centerY() - prevCenterY
+                                dx * dx + dy * dy
+                            } ?: detectedFaces.first()
+                        }
+
+                        val paddedRect = expandRectWithPadding(selectedFace, 0.15f)
+                        lastFaceRect = paddedRect
+                        timedRects.add(TimedFaceRect(currentTimeMs, paddedRect))
                     }
                 }
 
@@ -104,6 +162,18 @@ class VideoFaceScanner(private val context: Context) {
         return@withContext timedRects
     }
 
+    private fun expandRectWithPadding(rect: RectF, paddingFraction: Float): RectF {
+        val width = rect.width()
+        val height = rect.height()
+        val padW = width * paddingFraction
+        val padH = height * paddingFraction
+        return RectF(
+            (rect.left - padW).coerceIn(0f, 1f),
+            (rect.top - padH).coerceIn(0f, 1f),
+            (rect.right + padW).coerceIn(0f, 1f),
+            (rect.bottom + padH).coerceIn(0f, 1f)
+        )
+    }
 
     private fun scaleBitmapIfNeeded(bitmap: Bitmap, maxDim: Int): Bitmap {
         val width = bitmap.width
