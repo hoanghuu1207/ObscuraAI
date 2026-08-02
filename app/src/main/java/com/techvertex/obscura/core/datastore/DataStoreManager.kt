@@ -22,6 +22,7 @@ class DataStoreManager @Inject constructor(
         val KEY_USER_TOKEN = stringPreferencesKey("user_token")
         val KEY_IS_ONBOARDING_COMPLETED = booleanPreferencesKey("is_onboarding_completed")
         val KEY_IS_PASS_INTRO = booleanPreferencesKey("is_pass_intro")
+        val KEY_LANGUAGE_CODE = stringPreferencesKey("language_code")
     }
 
     /**
@@ -134,5 +135,11 @@ class DataStoreManager @Inject constructor(
 
     suspend fun setPassIntro(value: Boolean) {
         saveBoolean(KEY_IS_PASS_INTRO, value)
+    }
+
+    val languageCode: Flow<String?> = getString(KEY_LANGUAGE_CODE, "en")
+
+    suspend fun saveLanguageCode(code: String) {
+        saveString(KEY_LANGUAGE_CODE, code)
     }
 }

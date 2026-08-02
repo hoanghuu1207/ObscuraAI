@@ -94,6 +94,11 @@ fun AppNavHost(
                 viewModel = settingsViewModel,
                 onNavigateBack = {
                     navController.popBackStack()
+                },
+                onLanguageChanged = {
+                    navController.navigate(Screen.Home.route) {
+                        popUpTo(Screen.Home.route) { inclusive = true }
+                    }
                 }
             )
         }

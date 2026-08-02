@@ -20,7 +20,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material.icons.filled.Build
+import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material3.Card
@@ -44,6 +44,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -63,8 +64,10 @@ import com.techvertex.obscura.ui.theme.Purple6366F1
 fun SettingsScreen(
     viewModel: SettingsViewModel,
     onNavigateBack: () -> Unit,
+    onLanguageChanged: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
+    val context = LocalContext.current
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     Scaffold(
@@ -125,7 +128,7 @@ fun SettingsScreen(
                     SettingItemCard(
                         icon = Icons.Default.AccountCircle,
                         title = "Language",
-                        subtitle = uiState.selectedLanguage,
+                        subtitle = uiState.selectedLanguageName,
                         onClick = { viewModel.onEvent(SettingsEvent.ToggleLanguageDialog(true)) }
                     )
                     Spacer(modifier = Modifier.height(12.dp))
@@ -133,7 +136,7 @@ fun SettingsScreen(
 
                 item {
                     SettingItemCard(
-                        icon = Icons.Default.Build,
+                        icon = Icons.Default.DateRange,
                         title = "Theme",
                         subtitle = uiState.selectedTheme,
                         onClick = { viewModel.onEvent(SettingsEvent.ToggleThemeDialog(true)) }
@@ -176,12 +179,18 @@ fun SettingsScreen(
 
     // Language Selection Dialog
     if (uiState.showLanguageDialog) {
-        OptionSelectionDialog(
+        LanguageSelectionDialog(
             title = "Select Language",
-            options = listOf("English", "Tiếng Việt", "Español", "Français", "日本語"),
-            selectedOption = uiState.selectedLanguage,
-            onOptionSelected = { lang ->
-                viewModel.onEvent(SettingsEvent.SelectLanguage(lang))
+            languages = uiState.supportedLanguages,
+            selectedCode = uiState.selectedLanguageCode,
+            onLanguageSelected = { langCode ->
+                viewModel.onEvent(
+                    SettingsEvent.SelectLanguage(
+                        languageCode = langCode,
+                        context = context,
+                        onLanguageChanged = onLanguageChanged
+                    )
+                )
             },
             onDismiss = {
                 viewModel.onEvent(SettingsEvent.ToggleLanguageDialog(false))
@@ -219,7 +228,7 @@ fun SettingsScreen(
     if (uiState.showAboutDialog) {
         InfoDialog(
             title = "About Obscura",
-            content = "${stringResource(R.string.app_name)} App\nVersion: ${BuildConfig.VERSION_NAME} \nDeveloper: TechVertex",
+            content = "${stringResource(R.string.app_name)} App\nVersion: ${BuildConfig.VERSION_NAME}\nDeveloper: TechVertex\nArchitecture: Clean Architecture + MVI + Jetpack Compose + OpenGL ES",
             onDismiss = {
                 viewModel.onEvent(SettingsEvent.ToggleAboutDialog(false))
             }
@@ -282,6 +291,88 @@ private fun SettingItemCard(
                 contentDescription = null,
                 tint = Gray94A3B8
             )
+        }
+    }
+}
+
+@Composable
+private fun LanguageSelectionDialog(
+    title: String,
+    languages: List<AppLanguage>,
+    selectedCode: String,
+    onLanguageSelected: (String) -> Unit,
+    onDismiss: () -> Unit
+) {
+    Dialog(onDismissRequest = onDismiss) {
+        Surface(
+            shape = RoundedCornerShape(20.dp),
+            color = Blue1E293B,
+            modifier = Modifier.padding(16.dp)
+        ) {
+            Column(
+                modifier = Modifier.padding(24.dp)
+            ) {
+                Text(
+                    text = title,
+                    color = Color.White,
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+                LazyColumn {
+                    items(languages.size) { index ->
+                        val lang = languages[index]
+                        val isSelected = (lang.code == selectedCode)
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clip(RoundedCornerShape(12.dp))
+                                .clickable { onLanguageSelected(lang.code) }
+                                .padding(vertical = 10.dp, horizontal = 8.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            RadioButton(
+                                selected = isSelected,
+                                onClick = { onLanguageSelected(lang.code) },
+                                colors = RadioButtonDefaults.colors(
+                                    selectedColor = Purple6366F1,
+                                    unselectedColor = Gray94A3B8
+                                )
+                            )
+                            Spacer(modifier = Modifier.width(12.dp))
+                            Column {
+                                Text(
+                                    text = lang.nativeName,
+                                    color = Color.White,
+                                    fontSize = 15.sp,
+                                    fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal
+                                )
+                                if (lang.displayName != lang.nativeName) {
+                                    Text(
+                                        text = lang.displayName,
+                                        color = Gray94A3B8,
+                                        fontSize = 12.sp
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }
+                Spacer(modifier = Modifier.height(16.dp))
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.End
+                ) {
+                    TextButton(onClick = onDismiss) {
+                        Text(
+                            text = "Cancel",
+                            color = Purple6366F1,
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.SemiBold
+                        )
+                    }
+                }
+            }
         }
     }
 }
