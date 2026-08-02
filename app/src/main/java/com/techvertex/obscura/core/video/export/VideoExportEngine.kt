@@ -491,7 +491,12 @@ class VideoExportEngine(
                 bufferInfo.offset = 0
                 bufferInfo.size = sampleSize
                 bufferInfo.presentationTimeUs = audioExtractor.sampleTime
-                bufferInfo.flags = audioExtractor.sampleFlags
+                val sampleFlags = audioExtractor.sampleFlags
+                bufferInfo.flags = if ((sampleFlags and MediaExtractor.SAMPLE_FLAG_SYNC) != 0) {
+                    MediaCodec.BUFFER_FLAG_KEY_FRAME
+                } else {
+                    0
+                }
 
                 muxer.writeSampleData(muxerAudioTrack, buffer, bufferInfo)
                 audioExtractor.advance()
