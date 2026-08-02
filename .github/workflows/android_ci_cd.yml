@@ -57,6 +57,16 @@ jobs:
           path: app/build/outputs/apk/debug/*.apk
           retention-days: 7
 
+      - name: Upload Debug to Firebase App Distribution
+        if: secrets.FIREBASE_APP_ID != '' && secrets.FIREBASE_SERVICE_ACCOUNT != ''
+        uses: wobsoriano/firebase-app-distribution-action@v1
+        with:
+          appId: ${{ secrets.FIREBASE_APP_ID }}
+          serviceCredentialsFileContent: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          groups: testers
+          file: app/build/outputs/apk/debug/app-debug.apk
+          releaseNotes: "Auto Building CI for commit: ${{ github.sha }}"
+
   # CD
   cd_release:
     name: Build Signed Release & Publish (CD)
@@ -119,3 +129,13 @@ jobs:
           generate_release_notes: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload Release to Firebase App Distribution
+        if: secrets.FIREBASE_APP_ID != '' && secrets.FIREBASE_SERVICE_ACCOUNT != ''
+        uses: wobsoriano/firebase-app-distribution-action@v1
+        with:
+          appId: ${{ secrets.FIREBASE_APP_ID }}
+          serviceCredentialsFileContent: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          groups: testers
+          file: app/build/outputs/apk/release/app-release.apk
+          releaseNotes: "Release Tag Version: ${{ github.ref_name }}"
