@@ -5,6 +5,8 @@ import android.opengl.GLES11Ext
 import android.opengl.GLES20
 import android.opengl.GLSurfaceView
 import android.opengl.Matrix
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import com.techvertex.obscura.core.video.model.BlurVideoConfig
 import com.techvertex.obscura.core.video.model.VideoBlurType
@@ -100,9 +102,9 @@ class VideoTextureRenderer(
         oesTextureId = createOESTexture()
 
         surfaceTexture = SurfaceTexture(oesTextureId).apply {
-            setOnFrameAvailableListener {
+            setOnFrameAvailableListener({
                 updateSurface = true
-            }
+            }, Handler(Looper.getMainLooper()))
         }
         onSurfaceTextureAvailable(surfaceTexture!!)
 
@@ -131,13 +133,12 @@ class VideoTextureRenderer(
         if (isReleased) return
 
         if (updateSurface) {
+            updateSurface = false
             try {
                 surfaceTexture?.updateTexImage()
                 surfaceTexture?.getTransformMatrix(stMatrix)
-                updateSurface = false
             } catch (e: Exception) {
                 Log.e(TAG, "Error updating texture", e)
-                return
             }
         }
 

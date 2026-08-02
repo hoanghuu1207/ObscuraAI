@@ -23,8 +23,18 @@ class BlurVideoPlayer(private val context: Context) {
     var onVideoSizeChanged: ((Int, Int) -> Unit)? = null
     var onPlaybackStateChanged: ((Boolean) -> Unit)? = null
 
+    fun setSurfaceTexture(surfaceTexture: SurfaceTexture) {
+        surface?.release()
+        val newSurface = Surface(surfaceTexture)
+        surface = newSurface
+        exoPlayer?.setVideoSurface(newSurface)
+    }
+
     fun initialize(uri: Uri, surfaceTexture: SurfaceTexture) {
-        release()
+        if (exoPlayer != null) {
+            setSurfaceTexture(surfaceTexture)
+            return
+        }
 
         surface = Surface(surfaceTexture)
 
