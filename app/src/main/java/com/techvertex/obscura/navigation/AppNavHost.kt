@@ -18,11 +18,15 @@ import com.techvertex.obscura.feature.intro.IntroViewModel
 import com.techvertex.obscura.feature.splash.SplashScreen
 import com.techvertex.obscura.feature.splash.SplashViewModel
 
+import com.techvertex.obscura.feature.settings.SettingsScreen
+import com.techvertex.obscura.feature.settings.SettingsViewModel
+
 sealed class Screen(val route: String) {
     data object Splash : Screen("splash")
     data object Intro : Screen("intro")
     data object Home : Screen("home")
     data object Details : Screen("details")
+    data object Settings : Screen("settings")
     data object BlurVideo : Screen("blur_video/{videoUri}") {
         fun createRoute(videoUri: String) = "blur_video/$videoUri"
     }
@@ -77,6 +81,19 @@ fun AppNavHost(
                 },
                 onNavigateToBlurVideo = { videoUri ->
                     navController.navigate(Screen.BlurVideo.createRoute(videoUri))
+                },
+                onNavigateToSettings = {
+                    navController.navigate(Screen.Settings.route)
+                }
+            )
+        }
+
+        composable(Screen.Settings.route) {
+            val settingsViewModel: SettingsViewModel = hiltViewModel()
+            SettingsScreen(
+                viewModel = settingsViewModel,
+                onNavigateBack = {
+                    navController.popBackStack()
                 }
             )
         }
