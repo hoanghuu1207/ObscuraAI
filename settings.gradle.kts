@@ -19,5 +19,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Obscura"
+rootProject.name = "Obscura AI"
 include(":app")
