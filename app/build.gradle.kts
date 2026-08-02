@@ -49,6 +49,12 @@ android {
             )
         }
     }
+
+    lint {
+        abortOnError = true
+        checkReleaseBuilds = false
+    }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_21
         targetCompatibility = JavaVersion.VERSION_21

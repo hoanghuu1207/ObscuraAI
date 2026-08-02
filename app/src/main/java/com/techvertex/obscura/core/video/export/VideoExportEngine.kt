@@ -123,7 +123,11 @@ class VideoExportEngine(
             val outputPfd = outputResult.first
             val outputDisplayPath = outputResult.second
 
-            muxer = MediaMuxer(outputPfd.fileDescriptor, MediaMuxer.OutputFormat.MUXER_OUTPUT_MPEG_4)
+            muxer = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                MediaMuxer(outputPfd.fileDescriptor, MediaMuxer.OutputFormat.MUXER_OUTPUT_MPEG_4)
+            } else {
+                MediaMuxer(outputDisplayPath, MediaMuxer.OutputFormat.MUXER_OUTPUT_MPEG_4)
+            }
 
             val encoderFormat = MediaFormat.createVideoFormat(VIDEO_MIME_TYPE, outputWidth, outputHeight).apply {
                 setInteger(MediaFormat.KEY_COLOR_FORMAT, MediaCodecInfo.CodecCapabilities.COLOR_FormatSurface)
