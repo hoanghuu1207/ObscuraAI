@@ -8,10 +8,10 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="PLACEHOLDER" />
-                  <option name="mobileSdkAppId" value="" />
-                  <option name="projectId" value="" />
-                  <option name="projectNumber" value="" />
+                  <option name="appId" value="com.techvertex.obscura" />
+                  <option name="mobileSdkAppId" value="1:1066556796776:android:beb937e12fa2a5756430dd" />
+                  <option name="projectId" value="obscuraai-42e98" />
+                  <option name="projectNumber" value="1066556796776" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />
