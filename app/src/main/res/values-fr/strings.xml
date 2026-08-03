@@ -1,4 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Obscura AI</string>
+    <string name="get_started">Commencer</string>
+    <string name="welcome_to_obscura">Bienvenue sur Obscura</string>
+    <string name="settings">Paramètres</string>
+    <string name="language">Langue</string>
+    <string name="information_support"><![CDATA[Informations & Support]]></string>
+    <string name="privacy_policy">Politique de confidentialité</string>
+    <string name="read_data_protection_policy">Lire la politique de protection des données</string>
+    <string name="about">À propos</string>
+    <string name="obscura_v">Obscura v%1$s</string>
+    <string name="select_language">Choisir la langue</string>
+    <string name="select_theme">Choisir le thème</string>
+    <string name="obscura_values_user_privacy_all_video_processing_and_blur_effects_are_executed_locally_on_your_device_no_personal_media_or_data_is_uploaded_to_external_servers">Obscura respecte la vie privée des utilisateurs. Tous les traitements vidéo et effets de flou sont exécutés localement sur votre appareil. Aucun média ou donnée personnelle n\'est téléchargé sur des serveurs externes.</string>
+    <string name="about_obscura">À propos d\'Obscura</string>
+    <string name="cancel">Annuler</string>
+    <string name="close">Fermer</string>
+    <string name="app_settings">Paramètres de l\'application</string>
+    <string name="dark_theme">Thème sombre</string>
+    <string name="light_theme">Thème clair</string>
+    <string name="system_default">Par défaut du système</string>
+    <string name="app_version_developer_techvertex">Application %1$s\nVersion: %2$s\nDéveloppeur: TechVertex</string>
+    <string name="blur_video">Flouter la vidéo</string>
+    <string name="pick_a_video_apply_blur_effects"><![CDATA[Choisissez une vidéo & appliquez des effets de flou]]></string>
 </resources>

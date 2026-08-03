@@ -23,12 +23,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Build
-import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -47,16 +44,16 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.techvertex.obscura.R
 import com.techvertex.obscura.ui.theme.Blue0F172A
 import com.techvertex.obscura.ui.theme.Blue1E293B
-import com.techvertex.obscura.ui.theme.Gray334155
-import com.techvertex.obscura.ui.theme.Gray94A3B8
 import com.techvertex.obscura.ui.theme.Purple6366F1
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -103,7 +100,7 @@ fun HomeScreen(
             TopAppBar(
                 title = {
                     Text(
-                        text = "Obscura",
+                        text = stringResource(R.string.app_name),
                         fontWeight = FontWeight.Bold,
                         color = Color.White
                     )
@@ -170,23 +167,8 @@ fun HomeScreen(
                         .padding(horizontal = 16.dp)
                 ) {
                     item {
-                        Spacer(modifier = Modifier.height(16.dp))
-                        Text(
-                            text = "Clean Architecture + MVI Template",
-                            color = Color(0xFF94A3B8),
-                            fontSize = 14.sp,
-                            fontWeight = FontWeight.Medium
-                        )
-                        Spacer(modifier = Modifier.height(8.dp))
-                        Text(
-                            text = "Explore Base Features",
-                            color = Color.White,
-                            fontSize = 24.sp,
-                            fontWeight = FontWeight.Bold
-                        )
                         Spacer(modifier = Modifier.height(20.dp))
 
-                        // Blur Video Feature Entry Point
                         BlurVideoFeatureCard(
                             onClick = {
                                 videoPickerLauncher.launch(
@@ -195,17 +177,6 @@ fun HomeScreen(
                             }
                         )
                         Spacer(modifier = Modifier.height(16.dp))
-                    }
-
-                    items(uiState.items) { item ->
-                        HomeItemCard(
-                            text = item,
-                            onClick = {
-                                viewModel.onEvent(HomeEvent.ItemClicked(item))
-                                onNavigateToDetails(item)
-                            }
-                        )
-                        Spacer(modifier = Modifier.height(12.dp))
                     }
                 }
             }
@@ -245,49 +216,18 @@ fun BlurVideoFeatureCard(
             Spacer(modifier = Modifier.width(16.dp))
             Column {
                 Text(
-                    text = "Blur Video",
+                    text = stringResource(R.string.blur_video),
                     color = Color.White,
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
-                    text = "Pick a video & apply GPU OpenGL blur effects",
+                    text = stringResource(R.string.pick_a_video_apply_blur_effects),
                     color = Color.White.copy(alpha = 0.8f),
                     fontSize = 12.sp
                 )
             }
-        }
-    }
-}
-
-@Composable
-fun HomeItemCard(
-    text: String,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    Box(
-        modifier = modifier
-            .fillMaxWidth()
-            .clip(RoundedCornerShape(16.dp))
-            .background(Gray334155.copy(alpha = 0.4f))
-            .clickable { onClick() }
-            .padding(16.dp)
-    ) {
-        Column {
-            Text(
-                text = text,
-                color = Color.White,
-                fontSize = 16.sp,
-                fontWeight = FontWeight.SemiBold
-            )
-            Spacer(modifier = Modifier.height(4.dp))
-            Text(
-                text = "Tap to explore this feature set",
-                color = Gray94A3B8,
-                fontSize = 12.sp
-            )
         }
     }
 }

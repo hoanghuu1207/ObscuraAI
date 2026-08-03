@@ -1,4 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Obscura AI</string>
+    <string name="get_started">Mulai</string>
+    <string name="welcome_to_obscura">Selamat Datang di Obscura</string>
+    <string name="settings">Pengaturan</string>
+    <string name="language">Bahasa</string>
+    <string name="information_support"><![CDATA[Informasi & Dukungan]]></string>
+    <string name="privacy_policy">Kebijakan Privasi</string>
+    <string name="read_data_protection_policy">Baca kebijakan perlindungan data</string>
+    <string name="about">Tentang</string>
+    <string name="obscura_v">Obscura v%1$s</string>
+    <string name="select_language">Pilih Bahasa</string>
+    <string name="select_theme">Pilih Tema</string>
+    <string name="obscura_values_user_privacy_all_video_processing_and_blur_effects_are_executed_locally_on_your_device_no_personal_media_or_data_is_uploaded_to_external_servers">Obscura menghargai privasi pengguna. Semua pemrosesan video dan efek buram dijalankan secara lokal di perangkat Anda. Tidak ada media atau data pribadi yang diunggah ke server eksternal.</string>
+    <string name="about_obscura">Tentang Obscura</string>
+    <string name="cancel">Batal</string>
+    <string name="close">Tutup</string>
+    <string name="app_settings">Pengaturan Aplikasi</string>
+    <string name="dark_theme">Tema Gelap</string>
+    <string name="light_theme">Tema Terang</string>
+    <string name="system_default">Default Sistem</string>
+    <string name="app_version_developer_techvertex">Aplikasi %1$s\nVersi: %2$s\nPengembang: TechVertex</string>
+    <string name="blur_video">Kaburkan Video</string>
+    <string name="pick_a_video_apply_blur_effects"><![CDATA[Pilih video & terapkan efek buram]]></string>
 </resources>

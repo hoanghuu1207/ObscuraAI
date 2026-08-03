@@ -1,4 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Obscura AI</string>
+    <string name="get_started">始める</string>
+    <string name="welcome_to_obscura">Obscuraへようこそ</string>
+    <string name="settings">設定</string>
+    <string name="language">言語</string>
+    <string name="information_support"><![CDATA[情報とサポート]]></string>
+    <string name="privacy_policy">プライバシーポリシー</string>
+    <string name="read_data_protection_policy">データ保護ポリシーを読む</string>
+    <string name="about">アプリについて</string>
+    <string name="obscura_v">Obscura v%1$s</string>
+    <string name="select_language">言語を選択</string>
+    <string name="select_theme">テーマを選択</string>
+    <string name="obscura_values_user_privacy_all_video_processing_and_blur_effects_are_executed_locally_on_your_device_no_personal_media_or_data_is_uploaded_to_external_servers">Obscuraはユーザーのプライバシーを尊重します。すべての動画処理とぼかしエフェクトはお使いの端末上でローカルに実行されます。個人のメディアやデータが外部サーバーにアップロードされることはありません。</string>
+    <string name="about_obscura">Obscuraについて</string>
+    <string name="cancel">キャンセル</string>
+    <string name="close">閉じる</string>
+    <string name="app_settings">アプリ設定</string>
+    <string name="dark_theme">ダークテーマ</string>
+    <string name="light_theme">ライトテーマ</string>
+    <string name="system_default">システムデフォルト</string>
+    <string name="app_version_developer_techvertex">%1$s アプリ\nバージョン: %2$s\n開発元: TechVertex</string>
+    <string name="blur_video">動画ぼかし</string>
+    <string name="pick_a_video_apply_blur_effects"><![CDATA[動画を選択してぼかしエフェクトを適用]]></string>
 </resources>

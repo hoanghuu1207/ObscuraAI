@@ -18,13 +18,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.techvertex.obscura.R
 import com.techvertex.obscura.ui.theme.Blue0F172A
 import com.techvertex.obscura.ui.theme.Blue1E293B
-import com.techvertex.obscura.ui.theme.Gray94A3B8
 import com.techvertex.obscura.ui.theme.Purple6366F1
 
 @Composable
@@ -52,19 +53,13 @@ fun IntroScreen(
             verticalArrangement = Arrangement.Center
         ) {
             Text(
-                text = "Welcome to Obscura",
+                text = stringResource(R.string.welcome_to_obscura),
                 fontSize = 28.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color.White,
                 textAlign = TextAlign.Center
             )
             Spacer(modifier = Modifier.height(12.dp))
-            Text(
-                text = "Experience modern Android architecture with Jetpack Compose & Hilt.",
-                fontSize = 16.sp,
-                color = Gray94A3B8,
-                textAlign = TextAlign.Center
-            )
             Spacer(modifier = Modifier.height(40.dp))
             Button(
                 onClick = {
@@ -81,7 +76,7 @@ fun IntroScreen(
                 )
             ) {
                 Text(
-                    text = "Get Started",
+                    text = stringResource(R.string.get_started),
                     fontSize = 16.sp,
                     fontWeight = FontWeight.SemiBold,
                     color = Color.White

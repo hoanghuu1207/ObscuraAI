@@ -1,4 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Obscura AI</string>
+    <string name="get_started">Bắt đầu</string>
+    <string name="welcome_to_obscura">Chào mừng đến với Obscura</string>
+    <string name="settings">Cài đặt</string>
+    <string name="language">Ngôn ngữ</string>
+    <string name="information_support"><![CDATA[Thông tin & Hỗ trợ]]></string>
+    <string name="privacy_policy">Chính sách bảo mật</string>
+    <string name="read_data_protection_policy">Đọc chính sách bảo vệ dữ liệu</string>
+    <string name="about">Giới thiệu</string>
+    <string name="obscura_v">Obscura v%1$s</string>
+    <string name="select_language">Chọn ngôn ngữ</string>
+    <string name="select_theme">Chọn giao diện</string>
+    <string name="obscura_values_user_privacy_all_video_processing_and_blur_effects_are_executed_locally_on_your_device_no_personal_media_or_data_is_uploaded_to_external_servers">Obscura tôn trọng quyền riêng tư của bạn. Tất cả quá trình xử lý video và hiệu ứng làm mờ đều được thực hiện cục bộ trên thiết bị của bạn. Không có dữ liệu hoặc phương tiện cá nhân nào được tải lên máy chủ bên ngoài.</string>
+    <string name="about_obscura">Giới thiệu Obscura</string>
+    <string name="cancel">Hủy</string>
+    <string name="close">Đóng</string>
+    <string name="app_settings">Cài đặt ứng dụng</string>
+    <string name="dark_theme">Giao diện tối</string>
+    <string name="light_theme">Giao diện sáng</string>
+    <string name="system_default">Mặc định hệ thống</string>
+    <string name="app_version_developer_techvertex">Ứng dụng %1$s\nPhiên bản: %2$s\nNhà phát triển: TechVertex</string>
+    <string name="blur_video">Làm mờ Video</string>
+    <string name="pick_a_video_apply_blur_effects"><![CDATA[Chọn video & áp dụng hiệu ứng làm mờ]]></string>
 </resources>

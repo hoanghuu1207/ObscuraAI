@@ -76,7 +76,7 @@ fun SettingsScreen(
             TopAppBar(
                 title = {
                     Text(
-                        text = "Settings",
+                        text = stringResource(R.string.settings),
                         fontWeight = FontWeight.Bold,
                         color = Color.White
                     )
@@ -116,7 +116,7 @@ fun SettingsScreen(
             ) {
                 item {
                     Text(
-                        text = "App Settings",
+                        text = stringResource(R.string.app_settings),
                         color = Gray94A3B8,
                         fontSize = 14.sp,
                         fontWeight = FontWeight.SemiBold,
@@ -127,7 +127,7 @@ fun SettingsScreen(
                 item {
                     SettingItemCard(
                         icon = Icons.Default.AccountCircle,
-                        title = "Language",
+                        title = stringResource(R.string.language),
                         subtitle = uiState.selectedLanguageName,
                         onClick = { viewModel.onEvent(SettingsEvent.ToggleLanguageDialog(true)) }
                     )
@@ -146,7 +146,7 @@ fun SettingsScreen(
 
                 item {
                     Text(
-                        text = "Information & Support",
+                        text = stringResource(R.string.information_support),
                         color = Gray94A3B8,
                         fontSize = 14.sp,
                         fontWeight = FontWeight.SemiBold,
@@ -157,8 +157,8 @@ fun SettingsScreen(
                 item {
                     SettingItemCard(
                         icon = Icons.Default.Lock,
-                        title = "Privacy Policy",
-                        subtitle = "Read data protection policy",
+                        title = stringResource(R.string.privacy_policy),
+                        subtitle = stringResource(R.string.read_data_protection_policy),
                         onClick = { viewModel.onEvent(SettingsEvent.TogglePrivacyDialog(true)) }
                     )
                     Spacer(modifier = Modifier.height(12.dp))
@@ -167,8 +167,8 @@ fun SettingsScreen(
                 item {
                     SettingItemCard(
                         icon = Icons.Default.Info,
-                        title = "About",
-                        subtitle = "Obscura v${BuildConfig.VERSION_NAME}",
+                        title = stringResource(R.string.about),
+                        subtitle = stringResource(R.string.obscura_v, BuildConfig.VERSION_NAME),
                         onClick = { viewModel.onEvent(SettingsEvent.ToggleAboutDialog(true)) }
                     )
                     Spacer(modifier = Modifier.height(12.dp))
@@ -177,10 +177,9 @@ fun SettingsScreen(
         }
     }
 
-    // Language Selection Dialog
     if (uiState.showLanguageDialog) {
         LanguageSelectionDialog(
-            title = "Select Language",
+            title = stringResource(R.string.select_language),
             languages = uiState.supportedLanguages,
             selectedCode = uiState.selectedLanguageCode,
             onLanguageSelected = { langCode ->
@@ -201,8 +200,12 @@ fun SettingsScreen(
     // Theme Selection Dialog
     if (uiState.showThemeDialog) {
         OptionSelectionDialog(
-            title = "Select Theme",
-            options = listOf("Dark Theme", "Light Theme", "System Default"),
+            title = stringResource(R.string.select_theme),
+            options = listOf(
+                stringResource(R.string.dark_theme),
+                stringResource(R.string.light_theme),
+                stringResource(R.string.system_default)
+            ),
             selectedOption = uiState.selectedTheme,
             onOptionSelected = { theme ->
                 viewModel.onEvent(SettingsEvent.SelectTheme(theme))
@@ -216,8 +219,8 @@ fun SettingsScreen(
     // Privacy Policy Dialog
     if (uiState.showPrivacyDialog) {
         InfoDialog(
-            title = "Privacy Policy",
-            content = "Obscura values user privacy. All video processing and GPU OpenGL blur effects are executed locally on your device. No personal media or data is uploaded to external servers.",
+            title = stringResource(R.string.privacy_policy),
+            content = stringResource(R.string.obscura_values_user_privacy_all_video_processing_and_blur_effects_are_executed_locally_on_your_device_no_personal_media_or_data_is_uploaded_to_external_servers),
             onDismiss = {
                 viewModel.onEvent(SettingsEvent.TogglePrivacyDialog(false))
             }
@@ -227,8 +230,12 @@ fun SettingsScreen(
     // About Dialog
     if (uiState.showAboutDialog) {
         InfoDialog(
-            title = "About Obscura",
-            content = "${stringResource(R.string.app_name)} App\nVersion: ${BuildConfig.VERSION_NAME}\nDeveloper: TechVertex\nArchitecture: Clean Architecture + MVI + Jetpack Compose + OpenGL ES",
+            title = stringResource(R.string.about_obscura),
+            content = stringResource(
+                R.string.app_version_developer_techvertex,
+                stringResource(R.string.app_name),
+                BuildConfig.VERSION_NAME
+            ),
             onDismiss = {
                 viewModel.onEvent(SettingsEvent.ToggleAboutDialog(false))
             }
@@ -365,7 +372,7 @@ private fun LanguageSelectionDialog(
                 ) {
                     TextButton(onClick = onDismiss) {
                         Text(
-                            text = "Cancel",
+                            text = stringResource(R.string.cancel),
                             color = Purple6366F1,
                             fontSize = 14.sp,
                             fontWeight = FontWeight.SemiBold
@@ -434,7 +441,7 @@ private fun OptionSelectionDialog(
                 ) {
                     TextButton(onClick = onDismiss) {
                         Text(
-                            text = "Cancel",
+                            text = stringResource(R.string.cancel),
                             color = Purple6366F1,
                             fontSize = 14.sp,
                             fontWeight = FontWeight.SemiBold
@@ -490,7 +497,7 @@ private fun InfoDialog(
                             contentAlignment = Alignment.Center
                         ) {
                             Text(
-                                text = "Close",
+                                text = stringResource(R.string.close),
                                 color = Color.White,
                                 fontWeight = FontWeight.SemiBold,
                                 fontSize = 14.sp

@@ -1,4 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Obscura AI</string>
+    <string name="get_started">Loslegen</string>
+    <string name="welcome_to_obscura">Willkommen bei Obscura</string>
+    <string name="settings">Einstellungen</string>
+    <string name="language">Sprache</string>
+    <string name="information_support"><![CDATA[Informationen & Support]]></string>
+    <string name="privacy_policy">Datenschutz-Bestimmungen</string>
+    <string name="read_data_protection_policy">Datenschutzrichtlinie lesen</string>
+    <string name="about">Über uns</string>
+    <string name="obscura_v">Obscura v%1$s</string>
+    <string name="select_language">Sprache auswählen</string>
+    <string name="select_theme">Design auswählen</string>
+    <string name="obscura_values_user_privacy_all_video_processing_and_blur_effects_are_executed_locally_on_your_device_no_personal_media_or_data_is_uploaded_to_external_servers">Obscura schätzt die Privatsphäre der Nutzer. Alle Videoverarbeitungen und Unschärfe-Effekte werden lokal auf Ihrem Gerät ausgeführt. Es werden keine persönlichen Medien oder Daten auf externe Server hochgeladen.</string>
+    <string name="about_obscura">Über Obscura</string>
+    <string name="cancel">Abbrechen</string>
+    <string name="close">Schließen</string>
+    <string name="app_settings">App-Einstellungen</string>
+    <string name="dark_theme">Dunkles Design</string>
+    <string name="light_theme">Helles Design</string>
+    <string name="system_default">Systemstandard</string>
+    <string name="app_version_developer_techvertex">%1$s App\nVersion: %2$s\nEntwickler: TechVertex</string>
+    <string name="blur_video">Video Weichzeichnen</string>
+    <string name="pick_a_video_apply_blur_effects"><![CDATA[Wählen Sie ein Video & wenden Sie Weichzeichner-Effekte an]]></string>
 </resources>
