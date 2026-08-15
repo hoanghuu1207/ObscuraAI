@@ -22,4 +22,6 @@
     <string name="app_version_developer_techvertex">%1$s App\nVersion: %2$s\nDeveloper: TechVertex</string>
     <string name="blur_video">Blur Video</string>
     <string name="pick_a_video_apply_blur_effects"><![CDATA[Pick a video & apply blur effects]]></string>
+    <string name="skip">Skip</string>
+    <string name="next">Next</string>
 </resources>
