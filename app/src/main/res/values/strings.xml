@@ -25,4 +25,8 @@
     <string name="skip">Skip</string>
     <string name="next">Next</string>
     <string name="secure_local_face_blur">Secure Local Face Blur</string>
+    <string name="choose_your_preferred_interface_language">Choose your preferred interface language</string>
+    <string name="personalize_your_workspace_experience">Personalize your workspace experience</string>
+    <string name="secure_on_device"><![CDATA[Secure & On-Device]]></string>
+    <string name="app_information">App Information</string>
 </resources>

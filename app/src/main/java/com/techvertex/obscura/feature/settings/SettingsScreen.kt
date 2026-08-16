@@ -21,15 +21,18 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
+import androidx.compose.material.icons.filled.Info
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.RadioButtonDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -54,15 +57,20 @@ import com.techvertex.obscura.BuildConfig
 import com.techvertex.obscura.R
 import com.techvertex.obscura.ui.theme.Black06040A
 import com.techvertex.obscura.ui.theme.Black0A0814
+import com.techvertex.obscura.ui.theme.Black111726
+import com.techvertex.obscura.ui.theme.Black1E293B
+import com.techvertex.obscura.ui.theme.Black334155
 import com.techvertex.obscura.ui.theme.Blue00E5FF
 import com.techvertex.obscura.ui.theme.Blue131B2E
+import com.techvertex.obscura.ui.theme.Blue1A2642
 import com.techvertex.obscura.ui.theme.Blue1E293B
 import com.techvertex.obscura.ui.theme.Blue2E3D5C
 import com.techvertex.obscura.ui.theme.Gray334155
+import com.techvertex.obscura.ui.theme.Gray475569
 import com.techvertex.obscura.ui.theme.Gray94A3B8
-import com.techvertex.obscura.ui.theme.Purple6366F1
 import com.techvertex.obscura.ui.theme.Purple8B5CF6
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(
     modifier: Modifier = Modifier,
@@ -265,8 +273,9 @@ fun SettingsScreen(
     }
 
     if (uiState.showLanguageDialog) {
-        LanguageSelectionDialog(
+        LanguageSelectionBottomSheet(
             title = stringResource(R.string.select_language),
+            subtitle = stringResource(R.string.choose_your_preferred_interface_language),
             languages = uiState.supportedLanguages,
             selectedCode = uiState.selectedLanguageCode,
             onLanguageSelected = { langCode ->
@@ -285,8 +294,9 @@ fun SettingsScreen(
     }
 
     if (uiState.showThemeDialog) {
-        OptionSelectionDialog(
+        ThemeSelectionBottomSheet(
             title = stringResource(R.string.select_theme),
+            subtitle = stringResource(R.string.personalize_your_workspace_experience),
             options = listOf(
                 stringResource(R.string.dark_theme),
                 stringResource(R.string.light_theme),
@@ -303,9 +313,7 @@ fun SettingsScreen(
     }
 
     if (uiState.showPrivacyDialog) {
-        InfoDialog(
-            title = stringResource(R.string.privacy_policy),
-            content = stringResource(R.string.obscura_values_user_privacy_all_video_processing_and_blur_effects_are_executed_locally_on_your_device_no_personal_media_or_data_is_uploaded_to_external_servers),
+        PrivacyPolicyDialog(
             onDismiss = {
                 viewModel.onEvent(SettingsEvent.TogglePrivacyDialog(false))
             }
@@ -313,13 +321,7 @@ fun SettingsScreen(
     }
 
     if (uiState.showAboutDialog) {
-        InfoDialog(
-            title = stringResource(R.string.about_obscura),
-            content = stringResource(
-                R.string.app_version_developer_techvertex,
-                stringResource(R.string.app_name),
-                BuildConfig.VERSION_NAME
-            ),
+        AboutObscuraDialog(
             onDismiss = {
                 viewModel.onEvent(SettingsEvent.ToggleAboutDialog(false))
             }
@@ -384,151 +386,311 @@ private fun SettingRowItem(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun LanguageSelectionDialog(
+private fun LanguageSelectionBottomSheet(
     title: String,
+    subtitle: String,
     languages: List<AppLanguage>,
     selectedCode: String,
     onLanguageSelected: (String) -> Unit,
     onDismiss: () -> Unit
 ) {
-    Dialog(onDismissRequest = onDismiss) {
-        Surface(
-            shape = RoundedCornerShape(20.dp),
-            color = Blue1E293B,
-            modifier = Modifier.padding(16.dp)
+    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+    val cyanColor = Blue00E5FF
+
+    ModalBottomSheet(
+        onDismissRequest = onDismiss,
+        sheetState = sheetState,
+        containerColor = Black111726,
+        scrimColor = Color.Black.copy(alpha = 0.6f),
+        shape = RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp),
+        dragHandle = {
+            Box(
+                modifier = Modifier
+                    .padding(top = 12.dp, bottom = 8.dp)
+                    .size(width = 36.dp, height = 4.dp)
+                    .clip(RoundedCornerShape(2.dp))
+                    .background(Black334155)
+            )
+        }
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 24.dp, vertical = 8.dp)
         ) {
-            Column(
-                modifier = Modifier.padding(24.dp)
+            Text(
+                text = title,
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color.White
+            )
+            Spacer(modifier = Modifier.height(4.dp))
+            Text(
+                text = subtitle,
+                fontSize = 13.sp,
+                color = Gray94A3B8
+            )
+            Spacer(modifier = Modifier.height(20.dp))
+
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(300.dp)
             ) {
-                Text(
-                    text = title,
-                    color = Color.White,
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-                LazyColumn {
-                    items(languages.size) { index ->
-                        val lang = languages[index]
-                        val isSelected = (lang.code == selectedCode)
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clip(RoundedCornerShape(12.dp))
-                                .clickable { onLanguageSelected(lang.code) }
-                                .padding(vertical = 10.dp, horizontal = 8.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            RadioButton(
-                                selected = isSelected,
-                                onClick = { onLanguageSelected(lang.code) },
-                                colors = RadioButtonDefaults.colors(
-                                    selectedColor = Purple6366F1,
-                                    unselectedColor = Gray94A3B8
-                                )
-                            )
-                            Spacer(modifier = Modifier.width(12.dp))
-                            Column {
-                                Text(
-                                    text = lang.nativeName,
-                                    color = Color.White,
-                                    fontSize = 15.sp,
-                                    fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal
-                                )
-                                if (lang.displayName != lang.nativeName) {
-                                    Text(
-                                        text = lang.displayName,
-                                        color = Gray94A3B8,
-                                        fontSize = 12.sp
-                                    )
-                                }
-                            }
-                        }
-                    }
-                }
-                Spacer(modifier = Modifier.height(16.dp))
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.End
-                ) {
-                    TextButton(onClick = onDismiss) {
+                items(languages.size) { index ->
+                    val lang = languages[index]
+                    val isSelected = (lang.code == selectedCode)
+
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clip(RoundedCornerShape(14.dp))
+                            .background(if (isSelected) Blue1A2642 else Color.Transparent)
+                            .clickable { onLanguageSelected(lang.code) }
+                            .padding(horizontal = 16.dp, vertical = 14.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
                         Text(
-                            text = stringResource(R.string.cancel),
-                            color = Purple6366F1,
-                            fontSize = 14.sp,
-                            fontWeight = FontWeight.SemiBold
+                            text = lang.nativeName,
+                            color = if (isSelected) cyanColor else Color.White,
+                            fontSize = 15.sp,
+                            fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium
                         )
+                        RadioButton(
+                            selected = isSelected,
+                            onClick = { onLanguageSelected(lang.code) },
+                            colors = RadioButtonDefaults.colors(
+                                selectedColor = cyanColor,
+                                unselectedColor = Gray475569
+                            )
+                        )
+                    }
+                    if (index < languages.size - 1) {
+                        Spacer(modifier = Modifier.height(4.dp))
                     }
                 }
             }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Button(
+                onClick = onDismiss,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(52.dp),
+                shape = RoundedCornerShape(16.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Black1E293B
+                )
+            ) {
+                Text(
+                    text = stringResource(R.string.cancel),
+                    color = Color.White,
+                    fontSize = 15.sp,
+                    fontWeight = FontWeight.Bold
+                )
+            }
+            Spacer(modifier = Modifier.height(24.dp))
         }
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun OptionSelectionDialog(
+private fun ThemeSelectionBottomSheet(
     title: String,
+    subtitle: String,
     options: List<String>,
     selectedOption: String,
     onOptionSelected: (String) -> Unit,
     onDismiss: () -> Unit
 ) {
+    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+    val cyanColor = Blue00E5FF
+
+    ModalBottomSheet(
+        onDismissRequest = onDismiss,
+        sheetState = sheetState,
+        containerColor = Black111726,
+        scrimColor = Color.Black.copy(alpha = 0.6f),
+        shape = RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp),
+        dragHandle = {
+            Box(
+                modifier = Modifier
+                    .padding(top = 12.dp, bottom = 8.dp)
+                    .size(width = 36.dp, height = 4.dp)
+                    .clip(RoundedCornerShape(2.dp))
+                    .background(Gray334155)
+            )
+        }
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 24.dp, vertical = 8.dp)
+        ) {
+            Text(
+                text = title,
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color.White
+            )
+            Spacer(modifier = Modifier.height(4.dp))
+            Text(
+                text = subtitle,
+                fontSize = 13.sp,
+                color = Gray94A3B8
+            )
+            Spacer(modifier = Modifier.height(20.dp))
+
+            Column(
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                options.forEachIndexed { index, option ->
+                    val isSelected = (option == selectedOption)
+
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clip(RoundedCornerShape(14.dp))
+                            .background(if (isSelected) Blue1A2642 else Color.Transparent)
+                            .clickable { onOptionSelected(option) }
+                            .padding(horizontal = 16.dp, vertical = 14.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text(
+                            text = option,
+                            color = if (isSelected) cyanColor else Color.White,
+                            fontSize = 15.sp,
+                            fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium
+                        )
+                        RadioButton(
+                            selected = isSelected,
+                            onClick = { onOptionSelected(option) },
+                            colors = RadioButtonDefaults.colors(
+                                selectedColor = cyanColor,
+                                unselectedColor = Gray475569
+                            )
+                        )
+                    }
+                    if (index < options.size - 1) {
+                        Spacer(modifier = Modifier.height(4.dp))
+                    }
+                }
+            }
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            Button(
+                onClick = onDismiss,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(52.dp),
+                shape = RoundedCornerShape(16.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Black1E293B
+                )
+            ) {
+                Text(
+                    text = stringResource(R.string.cancel),
+                    color = Color.White,
+                    fontSize = 15.sp,
+                    fontWeight = FontWeight.Bold
+                )
+            }
+            Spacer(modifier = Modifier.height(24.dp))
+        }
+    }
+}
+
+@Composable
+private fun PrivacyPolicyDialog(
+    onDismiss: () -> Unit
+) {
+    val cyanColor = Blue00E5FF
+    val purpleColor = Purple8B5CF6
+    val containerBorder = Blue2E3D5C.copy(alpha = 0.4f)
+
     Dialog(onDismissRequest = onDismiss) {
         Surface(
-            shape = RoundedCornerShape(20.dp),
-            color = Blue1E293B,
-            modifier = Modifier.padding(16.dp)
+            shape = RoundedCornerShape(24.dp),
+            color = Black111726,
+            modifier = Modifier
+                .fillMaxWidth()
+                .border(1.dp, containerBorder, RoundedCornerShape(24.dp))
         ) {
             Column(
                 modifier = Modifier.padding(24.dp)
             ) {
-                Text(
-                    text = title,
-                    color = Color.White,
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-                options.forEach { option ->
-                    Row(
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Box(
                         modifier = Modifier
-                            .fillMaxWidth()
-                            .clip(RoundedCornerShape(12.dp))
-                            .clickable { onOptionSelected(option) }
-                            .padding(vertical = 10.dp, horizontal = 8.dp),
-                        verticalAlignment = Alignment.CenterVertically
+                            .size(44.dp)
+                            .clip(CircleShape)
+                            .background(cyanColor.copy(alpha = 0.15f)),
+                        contentAlignment = Alignment.Center
                     ) {
-                        RadioButton(
-                            selected = (option == selectedOption),
-                            onClick = { onOptionSelected(option) },
-                            colors = RadioButtonDefaults.colors(
-                                selectedColor = Purple6366F1,
-                                unselectedColor = Gray94A3B8
-                            )
+                        Icon(
+                            painter = painterResource(R.drawable.ic_privacy_policy),
+                            contentDescription = null,
+                            tint = cyanColor,
+                            modifier = Modifier.size(24.dp)
                         )
-                        Spacer(modifier = Modifier.width(12.dp))
+                    }
+                    Spacer(modifier = Modifier.width(16.dp))
+                    Column {
                         Text(
-                            text = option,
+                            text = stringResource(R.string.privacy_policy),
                             color = Color.White,
-                            fontSize = 15.sp,
-                            fontWeight = if (option == selectedOption) FontWeight.Bold else FontWeight.Normal
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                        Spacer(modifier = Modifier.height(2.dp))
+                        Text(
+                            text = stringResource(R.string.secure_on_device).uppercase(),
+                            color = cyanColor,
+                            fontSize = 11.sp,
+                            fontWeight = FontWeight.Bold,
+                            letterSpacing = 0.5.sp
                         )
                     }
                 }
+
                 Spacer(modifier = Modifier.height(16.dp))
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.End
+                HorizontalDivider(color = containerBorder)
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Text(
+                    text = stringResource(R.string.obscura_values_user_privacy_all_video_processing_and_blur_effects_are_executed_locally_on_your_device_no_personal_media_or_data_is_uploaded_to_external_servers),
+                    color = Gray94A3B8,
+                    fontSize = 14.sp,
+                    lineHeight = 20.sp
+                )
+
+                Spacer(modifier = Modifier.height(24.dp))
+
+                Button(
+                    onClick = onDismiss,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(52.dp),
+                    shape = RoundedCornerShape(16.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = purpleColor
+                    )
                 ) {
-                    TextButton(onClick = onDismiss) {
-                        Text(
-                            text = stringResource(R.string.cancel),
-                            color = Purple6366F1,
-                            fontSize = 14.sp,
-                            fontWeight = FontWeight.SemiBold
-                        )
-                    }
+                    Text(
+                        text = stringResource(R.string.close),
+                        color = Color.White,
+                        fontSize = 15.sp,
+                        fontWeight = FontWeight.Bold
+                    )
                 }
             }
         }
@@ -536,58 +698,123 @@ private fun OptionSelectionDialog(
 }
 
 @Composable
-private fun InfoDialog(
-    title: String,
-    content: String,
+private fun AboutObscuraDialog(
     onDismiss: () -> Unit
 ) {
+    val cyanColor = Blue00E5FF
+    val purpleColor = Purple8B5CF6
+    val containerBorder = Blue2E3D5C.copy(alpha = 0.4f)
+
     Dialog(onDismissRequest = onDismiss) {
         Surface(
-            shape = RoundedCornerShape(20.dp),
-            color = Blue1E293B,
-            modifier = Modifier.padding(16.dp)
+            shape = RoundedCornerShape(24.dp),
+            color = Black111726,
+            modifier = Modifier
+                .fillMaxWidth()
+                .border(1.dp, containerBorder, RoundedCornerShape(24.dp))
         ) {
             Column(
                 modifier = Modifier.padding(24.dp)
             ) {
-                Text(
-                    text = title,
-                    color = Color.White,
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .size(44.dp)
+                            .clip(CircleShape)
+                            .background(purpleColor.copy(alpha = 0.15f)),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            painter = painterResource(R.drawable.ic_info_about),
+                            contentDescription = null,
+                            tint = purpleColor,
+                            modifier = Modifier.size(24.dp)
+                        )
+                    }
+                    Spacer(modifier = Modifier.width(16.dp))
+                    Column {
+                        Text(
+                            text = stringResource(R.string.about_obscura),
+                            color = Color.White,
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                        Spacer(modifier = Modifier.height(2.dp))
+                        Text(
+                            text = stringResource(R.string.app_information).uppercase(),
+                            color = purpleColor,
+                            fontSize = 11.sp,
+                            fontWeight = FontWeight.Bold,
+                            letterSpacing = 0.5.sp
+                        )
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+                HorizontalDivider(color = containerBorder)
+                Spacer(modifier = Modifier.height(16.dp))
+
+                AboutInfoRow(
+                    label = "App Name",
+                    value = stringResource(R.string.app_name),
+                    valueColor = Color.White
                 )
                 Spacer(modifier = Modifier.height(12.dp))
-                Text(
-                    text = content,
-                    color = Gray94A3B8,
-                    fontSize = 14.sp,
-                    lineHeight = 20.sp
+                AboutInfoRow(
+                    label = "Version",
+                    value = BuildConfig.VERSION_NAME,
+                    valueColor = cyanColor
                 )
-                Spacer(modifier = Modifier.height(20.dp))
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.End
+                Spacer(modifier = Modifier.height(12.dp))
+                AboutInfoRow(label = "Developer", value = "TechVertex", valueColor = Color.White)
+
+                Spacer(modifier = Modifier.height(24.dp))
+
+                Button(
+                    onClick = onDismiss,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(52.dp),
+                    shape = RoundedCornerShape(16.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = purpleColor
+                    )
                 ) {
-                    Card(
-                        onClick = onDismiss,
-                        colors = CardDefaults.cardColors(containerColor = Purple6366F1),
-                        shape = RoundedCornerShape(10.dp)
-                    ) {
-                        Box(
-                            modifier = Modifier
-                                .padding(horizontal = 20.dp, vertical = 8.dp),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Text(
-                                text = stringResource(R.string.close),
-                                color = Color.White,
-                                fontWeight = FontWeight.SemiBold,
-                                fontSize = 14.sp
-                            )
-                        }
-                    }
+                    Text(
+                        text = stringResource(R.string.close),
+                        color = Color.White,
+                        fontSize = 15.sp,
+                        fontWeight = FontWeight.Bold
+                    )
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun AboutInfoRow(
+    label: String,
+    value: String,
+    valueColor: Color
+) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = label,
+            color = Gray94A3B8,
+            fontSize = 14.sp
+        )
+        Text(
+            text = value,
+            color = valueColor,
+            fontSize = 14.sp,
+            fontWeight = FontWeight.Bold
+        )
     }
 }
