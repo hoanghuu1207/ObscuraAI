@@ -1,6 +1,7 @@
 package com.techvertex.obscura.feature.settings
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -12,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
@@ -19,23 +21,15 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
-import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material.icons.filled.DateRange
-import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.RadioButtonDefaults
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -43,136 +37,229 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.techvertex.obscura.BuildConfig
 import com.techvertex.obscura.R
-import com.techvertex.obscura.ui.theme.Blue0F172A
+import com.techvertex.obscura.ui.theme.Black06040A
+import com.techvertex.obscura.ui.theme.Black0A0814
+import com.techvertex.obscura.ui.theme.Blue00E5FF
+import com.techvertex.obscura.ui.theme.Blue131B2E
 import com.techvertex.obscura.ui.theme.Blue1E293B
+import com.techvertex.obscura.ui.theme.Blue2E3D5C
 import com.techvertex.obscura.ui.theme.Gray334155
 import com.techvertex.obscura.ui.theme.Gray94A3B8
 import com.techvertex.obscura.ui.theme.Purple6366F1
+import com.techvertex.obscura.ui.theme.Purple8B5CF6
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(
+    modifier: Modifier = Modifier,
     viewModel: SettingsViewModel,
     onNavigateBack: () -> Unit,
     onLanguageChanged: () -> Unit = {},
-    modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    Scaffold(
-        modifier = modifier.fillMaxSize(),
-        topBar = {
-            TopAppBar(
-                title = {
-                    Text(
-                        text = stringResource(R.string.settings),
-                        fontWeight = FontWeight.Bold,
-                        color = Color.White
+    val cyanColor = Blue00E5FF
+    val purpleColor = Purple8B5CF6
+    val containerBg = Blue131B2E
+    val containerBorder = Blue2E3D5C.copy(alpha = 0.3f)
+
+    Box(
+        modifier = modifier
+            .fillMaxSize()
+            .background(
+                Brush.verticalGradient(
+                    colors = listOf(
+                        Black0A0814,
+                        Black06040A
                     )
-                },
-                navigationIcon = {
-                    IconButton(onClick = onNavigateBack) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Back",
-                            tint = Color.White
-                        )
-                    }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Blue0F172A
                 )
             )
-        }
-    ) { innerPadding ->
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-                .background(
-                    Brush.verticalGradient(
-                        colors = listOf(
-                            Blue0F172A,
-                            Blue1E293B
-                        )
-                    )
-                )
+            .statusBarsPadding()
+            .padding(horizontal = 20.dp)
+    ) {
+        Column(
+            modifier = Modifier.fillMaxSize()
         ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 16.dp, bottom = 16.dp)
+            ) {
+                Box(
+                    modifier = Modifier
+                        .size(40.dp)
+                        .clip(CircleShape)
+                        .background(Blue1E293B.copy(alpha = 0.6f))
+                        .border(1.dp, Gray334155, CircleShape)
+                        .clickable { onNavigateBack() }
+                        .align(Alignment.CenterStart),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                        contentDescription = "Back",
+                        tint = Color.White,
+                        modifier = Modifier.size(20.dp)
+                    )
+                }
+
+                Text(
+                    text = stringResource(R.string.settings),
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.White,
+                    modifier = Modifier.align(Alignment.Center)
+                )
+            }
+
             LazyColumn(
                 modifier = Modifier
-                    .fillMaxSize()
-                    .padding(horizontal = 16.dp, vertical = 8.dp)
+                    .weight(1f)
+                    .fillMaxWidth()
             ) {
                 item {
+                    Spacer(modifier = Modifier.height(12.dp))
                     Text(
-                        text = stringResource(R.string.app_settings),
-                        color = Gray94A3B8,
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        modifier = Modifier.padding(vertical = 12.dp)
+                        text = stringResource(R.string.app_settings).uppercase(),
+                        color = purpleColor,
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.Bold,
+                        letterSpacing = 0.8.sp,
+                        modifier = Modifier.padding(bottom = 10.dp, start = 4.dp)
                     )
+
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clip(RoundedCornerShape(20.dp))
+                            .background(containerBg)
+                            .border(1.dp, containerBorder, RoundedCornerShape(20.dp))
+                    ) {
+                        Column {
+                            SettingRowItem(
+                                icon = painterResource(R.drawable.ic_language),
+                                iconColor = cyanColor,
+                                iconBgColor = cyanColor.copy(alpha = 0.15f),
+                                title = stringResource(R.string.language),
+                                subtitle = uiState.selectedLanguageName,
+                                onClick = {
+                                    viewModel.onEvent(
+                                        SettingsEvent.ToggleLanguageDialog(
+                                            true
+                                        )
+                                    )
+                                }
+                            )
+
+                            HorizontalDivider(
+                                color = containerBorder,
+                                modifier = Modifier.padding(horizontal = 16.dp)
+                            )
+
+                            SettingRowItem(
+                                icon = painterResource(R.drawable.ic_themes),
+                                iconColor = purpleColor,
+                                iconBgColor = purpleColor.copy(alpha = 0.15f),
+                                title = stringResource(R.string.select_theme),
+                                subtitle = uiState.selectedTheme,
+                                onClick = { viewModel.onEvent(SettingsEvent.ToggleThemeDialog(true)) }
+                            )
+                        }
+                    }
                 }
 
                 item {
-                    SettingItemCard(
-                        icon = Icons.Default.AccountCircle,
-                        title = stringResource(R.string.language),
-                        subtitle = uiState.selectedLanguageName,
-                        onClick = { viewModel.onEvent(SettingsEvent.ToggleLanguageDialog(true)) }
-                    )
-                    Spacer(modifier = Modifier.height(12.dp))
-                }
-
-                item {
-                    SettingItemCard(
-                        icon = Icons.Default.DateRange,
-                        title = "Theme",
-                        subtitle = uiState.selectedTheme,
-                        onClick = { viewModel.onEvent(SettingsEvent.ToggleThemeDialog(true)) }
-                    )
-                    Spacer(modifier = Modifier.height(12.dp))
-                }
-
-                item {
+                    Spacer(modifier = Modifier.height(28.dp))
                     Text(
-                        text = stringResource(R.string.information_support),
-                        color = Gray94A3B8,
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        modifier = Modifier.padding(top = 16.dp, bottom = 12.dp)
+                        text = stringResource(R.string.information_support).uppercase(),
+                        color = purpleColor,
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.Bold,
+                        letterSpacing = 0.8.sp,
+                        modifier = Modifier.padding(bottom = 10.dp, start = 4.dp)
                     )
+
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clip(RoundedCornerShape(20.dp))
+                            .background(containerBg)
+                            .border(1.dp, containerBorder, RoundedCornerShape(20.dp))
+                    ) {
+                        Column {
+                            SettingRowItem(
+                                icon = painterResource(R.drawable.ic_privacy_policy),
+                                iconColor = cyanColor,
+                                iconBgColor = cyanColor.copy(alpha = 0.15f),
+                                title = stringResource(R.string.privacy_policy),
+                                subtitle = stringResource(R.string.read_data_protection_policy),
+                                onClick = { viewModel.onEvent(SettingsEvent.TogglePrivacyDialog(true)) }
+                            )
+
+                            HorizontalDivider(
+                                color = containerBorder,
+                                modifier = Modifier.padding(horizontal = 16.dp)
+                            )
+
+                            SettingRowItem(
+                                icon = painterResource(R.drawable.ic_info),
+                                iconColor = purpleColor,
+                                iconBgColor = purpleColor.copy(alpha = 0.15f),
+                                title = stringResource(R.string.about),
+                                subtitle = stringResource(
+                                    R.string.obscura_v,
+                                    BuildConfig.VERSION_NAME
+                                ),
+                                onClick = { viewModel.onEvent(SettingsEvent.ToggleAboutDialog(true)) }
+                            )
+                        }
+                    }
                 }
 
                 item {
-                    SettingItemCard(
-                        icon = Icons.Default.Lock,
-                        title = stringResource(R.string.privacy_policy),
-                        subtitle = stringResource(R.string.read_data_protection_policy),
-                        onClick = { viewModel.onEvent(SettingsEvent.TogglePrivacyDialog(true)) }
-                    )
-                    Spacer(modifier = Modifier.height(12.dp))
+                    Spacer(modifier = Modifier.height(32.dp))
                 }
+            }
 
-                item {
-                    SettingItemCard(
-                        icon = Icons.Default.Info,
-                        title = stringResource(R.string.about),
-                        subtitle = stringResource(R.string.obscura_v, BuildConfig.VERSION_NAME),
-                        onClick = { viewModel.onEvent(SettingsEvent.ToggleAboutDialog(true)) }
-                    )
-                    Spacer(modifier = Modifier.height(12.dp))
-                }
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 24.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = buildAnnotatedString {
+                        withStyle(SpanStyle(color = Color.White, fontWeight = FontWeight.Bold)) {
+                            append("OBSCURA ")
+                        }
+                        withStyle(SpanStyle(color = cyanColor, fontWeight = FontWeight.Bold)) {
+                            append("AI")
+                        }
+                    },
+                    fontSize = 15.sp
+                )
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(
+                    text = stringResource(R.string.secure_local_face_blur),
+                    color = Gray94A3B8,
+                    fontSize = 12.sp,
+                    textAlign = TextAlign.Center
+                )
             }
         }
     }
@@ -197,7 +284,6 @@ fun SettingsScreen(
         )
     }
 
-    // Theme Selection Dialog
     if (uiState.showThemeDialog) {
         OptionSelectionDialog(
             title = stringResource(R.string.select_theme),
@@ -216,7 +302,6 @@ fun SettingsScreen(
         )
     }
 
-    // Privacy Policy Dialog
     if (uiState.showPrivacyDialog) {
         InfoDialog(
             title = stringResource(R.string.privacy_policy),
@@ -227,7 +312,6 @@ fun SettingsScreen(
         )
     }
 
-    // About Dialog
     if (uiState.showAboutDialog) {
         InfoDialog(
             title = stringResource(R.string.about_obscura),
@@ -244,61 +328,59 @@ fun SettingsScreen(
 }
 
 @Composable
-private fun SettingItemCard(
-    icon: ImageVector,
+private fun SettingRowItem(
+    icon: Painter,
+    iconColor: Color,
+    iconBgColor: Color,
     title: String,
     subtitle: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Box(
+    Row(
         modifier = modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(16.dp))
-            .background(Gray334155.copy(alpha = 0.4f))
             .clickable { onClick() }
-            .padding(16.dp)
+            .padding(horizontal = 16.dp, vertical = 14.dp),
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically
+        Box(
+            modifier = Modifier
+                .size(42.dp)
+                .clip(CircleShape)
+                .background(iconBgColor),
+            contentAlignment = Alignment.Center
         ) {
-            Box(
-                modifier = Modifier
-                    .size(42.dp)
-                    .clip(CircleShape)
-                    .background(Purple6366F1.copy(alpha = 0.2f)),
-                contentAlignment = Alignment.Center
-            ) {
-                Icon(
-                    imageVector = icon,
-                    contentDescription = title,
-                    tint = Purple6366F1,
-                    modifier = Modifier.size(22.dp)
-                )
-            }
-            Spacer(modifier = Modifier.width(16.dp))
-            Column(
-                modifier = Modifier.weight(1f)
-            ) {
-                Text(
-                    text = title,
-                    color = Color.White,
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.SemiBold
-                )
-                Spacer(modifier = Modifier.height(2.dp))
-                Text(
-                    text = subtitle,
-                    color = Gray94A3B8,
-                    fontSize = 13.sp
-                )
-            }
             Icon(
-                imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
-                contentDescription = null,
-                tint = Gray94A3B8
+                painter = icon,
+                contentDescription = title,
+                tint = iconColor,
+                modifier = Modifier.size(22.dp)
             )
         }
+        Spacer(modifier = Modifier.width(16.dp))
+        Column(
+            modifier = Modifier.weight(1f)
+        ) {
+            Text(
+                text = title,
+                color = Color.White,
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Bold
+            )
+            Spacer(modifier = Modifier.height(2.dp))
+            Text(
+                text = subtitle,
+                color = Gray94A3B8,
+                fontSize = 13.sp
+            )
+        }
+        Icon(
+            imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+            contentDescription = null,
+            tint = Gray94A3B8.copy(alpha = 0.7f),
+            modifier = Modifier.size(20.dp)
+        )
     }
 }
 

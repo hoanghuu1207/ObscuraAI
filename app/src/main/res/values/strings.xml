@@ -24,4 +24,5 @@
     <string name="pick_a_video_apply_blur_effects"><![CDATA[Pick a video & apply blur effects]]></string>
     <string name="skip">Skip</string>
     <string name="next">Next</string>
+    <string name="secure_local_face_blur">Secure Local Face Blur</string>
 </resources>
