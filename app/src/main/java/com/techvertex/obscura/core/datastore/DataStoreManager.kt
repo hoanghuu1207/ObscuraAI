@@ -1,5 +1,6 @@
 package com.techvertex.obscura.core.datastore
 
+import SYSTEM
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
@@ -23,6 +24,7 @@ class DataStoreManager @Inject constructor(
         val KEY_IS_ONBOARDING_COMPLETED = booleanPreferencesKey("is_onboarding_completed")
         val KEY_IS_PASS_INTRO = booleanPreferencesKey("is_pass_intro")
         val KEY_LANGUAGE_CODE = stringPreferencesKey("language_code")
+        val KEY_THEME_MODE = stringPreferencesKey("theme_mode")
     }
 
     /**
@@ -108,6 +110,22 @@ class DataStoreManager @Inject constructor(
 
     suspend fun setDarkMode(enabled: Boolean) {
         saveBoolean(KEY_IS_DARK_MODE, enabled)
+    }
+
+    val themeMode: Flow<String> = dataStore.data
+        .catch { exception ->
+            if (exception is IOException) {
+                emit(emptyPreferences())
+            } else {
+                throw exception
+            }
+        }
+        .map { preferences ->
+            preferences[KEY_THEME_MODE] ?: SYSTEM
+        }
+
+    suspend fun saveThemeMode(mode: String) {
+        saveString(KEY_THEME_MODE, mode)
     }
 
     val userToken: Flow<String?> = getString(KEY_USER_TOKEN)

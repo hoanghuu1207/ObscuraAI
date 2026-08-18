@@ -21,7 +21,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
-import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -55,20 +54,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.techvertex.obscura.BuildConfig
 import com.techvertex.obscura.R
-import com.techvertex.obscura.ui.theme.Black06040A
-import com.techvertex.obscura.ui.theme.Black0A0814
-import com.techvertex.obscura.ui.theme.Black111726
-import com.techvertex.obscura.ui.theme.Black1E293B
-import com.techvertex.obscura.ui.theme.Black334155
-import com.techvertex.obscura.ui.theme.Blue00E5FF
-import com.techvertex.obscura.ui.theme.Blue131B2E
-import com.techvertex.obscura.ui.theme.Blue1A2642
-import com.techvertex.obscura.ui.theme.Blue1E293B
-import com.techvertex.obscura.ui.theme.Blue2E3D5C
-import com.techvertex.obscura.ui.theme.Gray334155
-import com.techvertex.obscura.ui.theme.Gray475569
-import com.techvertex.obscura.ui.theme.Gray94A3B8
-import com.techvertex.obscura.ui.theme.Purple8B5CF6
+import com.techvertex.obscura.ui.theme.ObscuraCustomTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -80,21 +66,17 @@ fun SettingsScreen(
 ) {
     val context = LocalContext.current
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val themeColors = ObscuraCustomTheme.colors
 
-    val cyanColor = Blue00E5FF
-    val purpleColor = Purple8B5CF6
-    val containerBg = Blue131B2E
-    val containerBorder = Blue2E3D5C.copy(alpha = 0.3f)
+    val cyanColor = Color(0xFF00E5FF)
+    val purpleColor = Color(0xFF8B5CF6)
 
     Box(
         modifier = modifier
             .fillMaxSize()
             .background(
                 Brush.verticalGradient(
-                    colors = listOf(
-                        Black0A0814,
-                        Black06040A
-                    )
+                    colors = themeColors.backgroundGradient
                 )
             )
             .statusBarsPadding()
@@ -112,8 +94,8 @@ fun SettingsScreen(
                     modifier = Modifier
                         .size(40.dp)
                         .clip(CircleShape)
-                        .background(Blue1E293B.copy(alpha = 0.6f))
-                        .border(1.dp, Gray334155, CircleShape)
+                        .background(themeColors.backButtonBg)
+                        .border(1.dp, themeColors.backButtonBorder, CircleShape)
                         .clickable { onNavigateBack() }
                         .align(Alignment.CenterStart),
                     contentAlignment = Alignment.Center
@@ -121,7 +103,7 @@ fun SettingsScreen(
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = "Back",
-                        tint = Color.White,
+                        tint = themeColors.textPrimary,
                         modifier = Modifier.size(20.dp)
                     )
                 }
@@ -130,7 +112,7 @@ fun SettingsScreen(
                     text = stringResource(R.string.settings),
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
-                    color = Color.White,
+                    color = themeColors.textPrimary,
                     modifier = Modifier.align(Alignment.Center)
                 )
             }
@@ -155,8 +137,8 @@ fun SettingsScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .clip(RoundedCornerShape(20.dp))
-                            .background(containerBg)
-                            .border(1.dp, containerBorder, RoundedCornerShape(20.dp))
+                            .background(themeColors.cardBackground)
+                            .border(1.dp, themeColors.cardBorder, RoundedCornerShape(20.dp))
                     ) {
                         Column {
                             SettingRowItem(
@@ -175,7 +157,7 @@ fun SettingsScreen(
                             )
 
                             HorizontalDivider(
-                                color = containerBorder,
+                                color = themeColors.cardBorder,
                                 modifier = Modifier.padding(horizontal = 16.dp)
                             )
 
@@ -206,8 +188,8 @@ fun SettingsScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .clip(RoundedCornerShape(20.dp))
-                            .background(containerBg)
-                            .border(1.dp, containerBorder, RoundedCornerShape(20.dp))
+                            .background(themeColors.cardBackground)
+                            .border(1.dp, themeColors.cardBorder, RoundedCornerShape(20.dp))
                     ) {
                         Column {
                             SettingRowItem(
@@ -220,7 +202,7 @@ fun SettingsScreen(
                             )
 
                             HorizontalDivider(
-                                color = containerBorder,
+                                color = themeColors.cardBorder,
                                 modifier = Modifier.padding(horizontal = 16.dp)
                             )
 
@@ -252,7 +234,7 @@ fun SettingsScreen(
             ) {
                 Text(
                     text = buildAnnotatedString {
-                        withStyle(SpanStyle(color = Color.White, fontWeight = FontWeight.Bold)) {
+                        withStyle(SpanStyle(color = themeColors.textPrimary, fontWeight = FontWeight.Bold)) {
                             append("OBSCURA ")
                         }
                         withStyle(SpanStyle(color = cyanColor, fontWeight = FontWeight.Bold)) {
@@ -264,7 +246,7 @@ fun SettingsScreen(
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
                     text = stringResource(R.string.secure_local_face_blur),
-                    color = Gray94A3B8,
+                    color = themeColors.textSecondary,
                     fontSize = 12.sp,
                     textAlign = TextAlign.Center
                 )
@@ -339,6 +321,8 @@ private fun SettingRowItem(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val themeColors = ObscuraCustomTheme.colors
+
     Row(
         modifier = modifier
             .fillMaxWidth()
@@ -366,21 +350,21 @@ private fun SettingRowItem(
         ) {
             Text(
                 text = title,
-                color = Color.White,
+                color = themeColors.textPrimary,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold
             )
             Spacer(modifier = Modifier.height(2.dp))
             Text(
                 text = subtitle,
-                color = Gray94A3B8,
+                color = themeColors.textSecondary,
                 fontSize = 13.sp
             )
         }
         Icon(
             imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
             contentDescription = null,
-            tint = Gray94A3B8.copy(alpha = 0.7f),
+            tint = themeColors.textSecondary.copy(alpha = 0.7f),
             modifier = Modifier.size(20.dp)
         )
     }
@@ -397,12 +381,13 @@ private fun LanguageSelectionBottomSheet(
     onDismiss: () -> Unit
 ) {
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
-    val cyanColor = Blue00E5FF
+    val cyanColor = Color(0xFF00E5FF)
+    val themeColors = ObscuraCustomTheme.colors
 
     ModalBottomSheet(
         onDismissRequest = onDismiss,
         sheetState = sheetState,
-        containerColor = Black111726,
+        containerColor = themeColors.bottomSheetBg,
         scrimColor = Color.Black.copy(alpha = 0.6f),
         shape = RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp),
         dragHandle = {
@@ -411,7 +396,7 @@ private fun LanguageSelectionBottomSheet(
                     .padding(top = 12.dp, bottom = 8.dp)
                     .size(width = 36.dp, height = 4.dp)
                     .clip(RoundedCornerShape(2.dp))
-                    .background(Black334155)
+                    .background(themeColors.textSecondary.copy(alpha = 0.4f))
             )
         }
     ) {
@@ -424,13 +409,13 @@ private fun LanguageSelectionBottomSheet(
                 text = title,
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
-                color = Color.White
+                color = themeColors.textPrimary
             )
             Spacer(modifier = Modifier.height(4.dp))
             Text(
                 text = subtitle,
                 fontSize = 13.sp,
-                color = Gray94A3B8
+                color = themeColors.textSecondary
             )
             Spacer(modifier = Modifier.height(20.dp))
 
@@ -447,7 +432,7 @@ private fun LanguageSelectionBottomSheet(
                         modifier = Modifier
                             .fillMaxWidth()
                             .clip(RoundedCornerShape(14.dp))
-                            .background(if (isSelected) Blue1A2642 else Color.Transparent)
+                            .background(if (isSelected) themeColors.bottomSheetItemBg else Color.Transparent)
                             .clickable { onLanguageSelected(lang.code) }
                             .padding(horizontal = 16.dp, vertical = 14.dp),
                         verticalAlignment = Alignment.CenterVertically,
@@ -455,7 +440,7 @@ private fun LanguageSelectionBottomSheet(
                     ) {
                         Text(
                             text = lang.nativeName,
-                            color = if (isSelected) cyanColor else Color.White,
+                            color = if (isSelected) cyanColor else themeColors.textPrimary,
                             fontSize = 15.sp,
                             fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium
                         )
@@ -464,7 +449,7 @@ private fun LanguageSelectionBottomSheet(
                             onClick = { onLanguageSelected(lang.code) },
                             colors = RadioButtonDefaults.colors(
                                 selectedColor = cyanColor,
-                                unselectedColor = Gray475569
+                                unselectedColor = themeColors.textSecondary
                             )
                         )
                     }
@@ -483,12 +468,12 @@ private fun LanguageSelectionBottomSheet(
                     .height(52.dp),
                 shape = RoundedCornerShape(16.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Black1E293B
+                    containerColor = themeColors.backButtonBg
                 )
             ) {
                 Text(
                     text = stringResource(R.string.cancel),
-                    color = Color.White,
+                    color = themeColors.textPrimary,
                     fontSize = 15.sp,
                     fontWeight = FontWeight.Bold
                 )
@@ -509,12 +494,13 @@ private fun ThemeSelectionBottomSheet(
     onDismiss: () -> Unit
 ) {
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
-    val cyanColor = Blue00E5FF
+    val cyanColor = Color(0xFF00E5FF)
+    val themeColors = ObscuraCustomTheme.colors
 
     ModalBottomSheet(
         onDismissRequest = onDismiss,
         sheetState = sheetState,
-        containerColor = Black111726,
+        containerColor = themeColors.bottomSheetBg,
         scrimColor = Color.Black.copy(alpha = 0.6f),
         shape = RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp),
         dragHandle = {
@@ -523,7 +509,7 @@ private fun ThemeSelectionBottomSheet(
                     .padding(top = 12.dp, bottom = 8.dp)
                     .size(width = 36.dp, height = 4.dp)
                     .clip(RoundedCornerShape(2.dp))
-                    .background(Gray334155)
+                    .background(themeColors.textSecondary.copy(alpha = 0.4f))
             )
         }
     ) {
@@ -536,13 +522,13 @@ private fun ThemeSelectionBottomSheet(
                 text = title,
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
-                color = Color.White
+                color = themeColors.textPrimary
             )
             Spacer(modifier = Modifier.height(4.dp))
             Text(
                 text = subtitle,
                 fontSize = 13.sp,
-                color = Gray94A3B8
+                color = themeColors.textSecondary
             )
             Spacer(modifier = Modifier.height(20.dp))
 
@@ -556,7 +542,7 @@ private fun ThemeSelectionBottomSheet(
                         modifier = Modifier
                             .fillMaxWidth()
                             .clip(RoundedCornerShape(14.dp))
-                            .background(if (isSelected) Blue1A2642 else Color.Transparent)
+                            .background(if (isSelected) themeColors.bottomSheetItemBg else Color.Transparent)
                             .clickable { onOptionSelected(option) }
                             .padding(horizontal = 16.dp, vertical = 14.dp),
                         verticalAlignment = Alignment.CenterVertically,
@@ -564,7 +550,7 @@ private fun ThemeSelectionBottomSheet(
                     ) {
                         Text(
                             text = option,
-                            color = if (isSelected) cyanColor else Color.White,
+                            color = if (isSelected) cyanColor else themeColors.textPrimary,
                             fontSize = 15.sp,
                             fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium
                         )
@@ -573,7 +559,7 @@ private fun ThemeSelectionBottomSheet(
                             onClick = { onOptionSelected(option) },
                             colors = RadioButtonDefaults.colors(
                                 selectedColor = cyanColor,
-                                unselectedColor = Gray475569
+                                unselectedColor = themeColors.textSecondary
                             )
                         )
                     }
@@ -592,12 +578,12 @@ private fun ThemeSelectionBottomSheet(
                     .height(52.dp),
                 shape = RoundedCornerShape(16.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Black1E293B
+                    containerColor = themeColors.backButtonBg
                 )
             ) {
                 Text(
                     text = stringResource(R.string.cancel),
-                    color = Color.White,
+                    color = themeColors.textPrimary,
                     fontSize = 15.sp,
                     fontWeight = FontWeight.Bold
                 )
@@ -611,17 +597,17 @@ private fun ThemeSelectionBottomSheet(
 private fun PrivacyPolicyDialog(
     onDismiss: () -> Unit
 ) {
-    val cyanColor = Blue00E5FF
-    val purpleColor = Purple8B5CF6
-    val containerBorder = Blue2E3D5C.copy(alpha = 0.4f)
+    val cyanColor = Color(0xFF00E5FF)
+    val purpleColor = Color(0xFF8B5CF6)
+    val themeColors = ObscuraCustomTheme.colors
 
     Dialog(onDismissRequest = onDismiss) {
         Surface(
             shape = RoundedCornerShape(24.dp),
-            color = Black111726,
+            color = themeColors.bottomSheetBg,
             modifier = Modifier
                 .fillMaxWidth()
-                .border(1.dp, containerBorder, RoundedCornerShape(24.dp))
+                .border(1.dp, themeColors.cardBorder, RoundedCornerShape(24.dp))
         ) {
             Column(
                 modifier = Modifier.padding(24.dp)
@@ -647,7 +633,7 @@ private fun PrivacyPolicyDialog(
                     Column {
                         Text(
                             text = stringResource(R.string.privacy_policy),
-                            color = Color.White,
+                            color = themeColors.textPrimary,
                             fontSize = 18.sp,
                             fontWeight = FontWeight.Bold
                         )
@@ -663,12 +649,12 @@ private fun PrivacyPolicyDialog(
                 }
 
                 Spacer(modifier = Modifier.height(16.dp))
-                HorizontalDivider(color = containerBorder)
+                HorizontalDivider(color = themeColors.cardBorder)
                 Spacer(modifier = Modifier.height(16.dp))
 
                 Text(
                     text = stringResource(R.string.obscura_values_user_privacy_all_video_processing_and_blur_effects_are_executed_locally_on_your_device_no_personal_media_or_data_is_uploaded_to_external_servers),
-                    color = Gray94A3B8,
+                    color = themeColors.textSecondary,
                     fontSize = 14.sp,
                     lineHeight = 20.sp
                 )
@@ -701,17 +687,17 @@ private fun PrivacyPolicyDialog(
 private fun AboutObscuraDialog(
     onDismiss: () -> Unit
 ) {
-    val cyanColor = Blue00E5FF
-    val purpleColor = Purple8B5CF6
-    val containerBorder = Blue2E3D5C.copy(alpha = 0.4f)
+    val cyanColor = Color(0xFF00E5FF)
+    val purpleColor = Color(0xFF8B5CF6)
+    val themeColors = ObscuraCustomTheme.colors
 
     Dialog(onDismissRequest = onDismiss) {
         Surface(
             shape = RoundedCornerShape(24.dp),
-            color = Black111726,
+            color = themeColors.bottomSheetBg,
             modifier = Modifier
                 .fillMaxWidth()
-                .border(1.dp, containerBorder, RoundedCornerShape(24.dp))
+                .border(1.dp, themeColors.cardBorder, RoundedCornerShape(24.dp))
         ) {
             Column(
                 modifier = Modifier.padding(24.dp)
@@ -737,7 +723,7 @@ private fun AboutObscuraDialog(
                     Column {
                         Text(
                             text = stringResource(R.string.about_obscura),
-                            color = Color.White,
+                            color = themeColors.textPrimary,
                             fontSize = 18.sp,
                             fontWeight = FontWeight.Bold
                         )
@@ -753,22 +739,15 @@ private fun AboutObscuraDialog(
                 }
 
                 Spacer(modifier = Modifier.height(16.dp))
-                HorizontalDivider(color = containerBorder)
+                HorizontalDivider(color = themeColors.cardBorder)
                 Spacer(modifier = Modifier.height(16.dp))
 
-                AboutInfoRow(
-                    label = "App Name",
-                    value = stringResource(R.string.app_name),
-                    valueColor = Color.White
-                )
+                // Table Rows
+                AboutInfoRow(label = "App Name", value = stringResource(R.string.app_name), valueColor = themeColors.textPrimary)
                 Spacer(modifier = Modifier.height(12.dp))
-                AboutInfoRow(
-                    label = "Version",
-                    value = BuildConfig.VERSION_NAME,
-                    valueColor = cyanColor
-                )
+                AboutInfoRow(label = "Version", value = BuildConfig.VERSION_NAME, valueColor = cyanColor)
                 Spacer(modifier = Modifier.height(12.dp))
-                AboutInfoRow(label = "Developer", value = "TechVertex", valueColor = Color.White)
+                AboutInfoRow(label = "Developer", value = "TechVertex", valueColor = themeColors.textPrimary)
 
                 Spacer(modifier = Modifier.height(24.dp))
 
@@ -800,6 +779,8 @@ private fun AboutInfoRow(
     value: String,
     valueColor: Color
 ) {
+    val themeColors = ObscuraCustomTheme.colors
+
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -807,7 +788,7 @@ private fun AboutInfoRow(
     ) {
         Text(
             text = label,
-            color = Gray94A3B8,
+            color = themeColors.textSecondary,
             fontSize = 14.sp
         )
         Text(

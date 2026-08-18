@@ -1,5 +1,8 @@
 package com.techvertex.obscura.feature.settings
 
+import DARK
+import LIGHT
+import SYSTEM
 import android.app.LocaleManager
 import android.content.Context
 import android.os.Build
@@ -39,6 +42,7 @@ data class SettingsUiState(
     val selectedLanguageName: String = "English",
     val supportedLanguages: List<AppLanguage> = SUPPORTED_LANGUAGES,
     val selectedTheme: String = "Dark Theme",
+    val selectedThemeCode: String = DARK,
     val showLanguageDialog: Boolean = false,
     val showThemeDialog: Boolean = false,
     val showPrivacyDialog: Boolean = false,
@@ -70,10 +74,20 @@ class SettingsViewModel @Inject constructor(
         viewModelScope.launch {
             val savedCode = dataStoreManager.languageCode.firstOrNull() ?: "en"
             val lang = SUPPORTED_LANGUAGES.find { it.code == savedCode } ?: SUPPORTED_LANGUAGES.first()
+
+            val savedThemeCode = dataStoreManager.themeMode.firstOrNull() ?: DARK
+            val displayTheme = when (savedThemeCode) {
+                LIGHT -> "Light Theme"
+                SYSTEM -> "System Default"
+                else -> "Dark Theme"
+            }
+
             _uiState.update {
                 it.copy(
                     selectedLanguageCode = lang.code,
-                    selectedLanguageName = lang.nativeName
+                    selectedLanguageName = lang.nativeName,
+                    selectedTheme = displayTheme,
+                    selectedThemeCode = savedThemeCode
                 )
             }
         }
@@ -97,7 +111,23 @@ class SettingsViewModel @Inject constructor(
                 }
             }
             is SettingsEvent.SelectTheme -> {
-                _uiState.update { it.copy(selectedTheme = event.theme, showThemeDialog = false) }
+                val themeCode = when (event.theme) {
+                    "Light Theme" -> LIGHT
+                    "System Default" -> SYSTEM
+                    else -> DARK
+                }
+
+                _uiState.update {
+                    it.copy(
+                        selectedTheme = event.theme,
+                        selectedThemeCode = themeCode,
+                        showThemeDialog = false
+                    )
+                }
+
+                viewModelScope.launch {
+                    dataStoreManager.saveThemeMode(themeCode)
+                }
             }
             is SettingsEvent.ToggleLanguageDialog -> {
                 _uiState.update { it.copy(showLanguageDialog = event.show) }
