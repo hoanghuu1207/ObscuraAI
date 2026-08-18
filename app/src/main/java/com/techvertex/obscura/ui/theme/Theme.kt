@@ -31,30 +31,30 @@ data class ObscuraColors(
 )
 
 val DarkObscuraColors = ObscuraColors(
-    backgroundGradient = listOf(Color(0xFF0A0814), Color(0xFF06040A)),
-    cardBackground = Color(0xFF131B2E),
-    cardBorder = Color(0xFF2E3D5C).copy(alpha = 0.3f),
+    backgroundGradient = listOf(Black0A0814, Black06040A),
+    cardBackground = Blue131B2E,
+    cardBorder = Blue2E3D5C.copy(alpha = 0.3f),
     textPrimary = Color.White,
-    textSecondary = Color(0xFF94A3B8),
-    topBarBg = Color(0xFF0F172A),
-    bottomSheetBg = Color(0xFF111726),
-    bottomSheetItemBg = Color(0xFF1A2642),
-    backButtonBg = Color(0xFF1E293B).copy(alpha = 0.6f),
-    backButtonBorder = Color(0xFF334155),
+    textSecondary = Gray94A3B8,
+    topBarBg = Blue0F172A,
+    bottomSheetBg = Black111726,
+    bottomSheetItemBg = Blue1A2642,
+    backButtonBg = Blue1E293B.copy(alpha = 0.6f),
+    backButtonBorder = Gray334155,
     isDark = true
 )
 
 val LightObscuraColors = ObscuraColors(
-    backgroundGradient = listOf(Color(0xFFF8FAFC), Color(0xFFF1F5F9)),
-    cardBackground = Color(0xFFFFFFFF),
-    cardBorder = Color(0xFFE2E8F0),
-    textPrimary = Color(0xFF0F172A),
-    textSecondary = Color(0xFF64748B),
-    topBarBg = Color(0xFFFFFFFF),
-    bottomSheetBg = Color(0xFFFFFFFF),
-    bottomSheetItemBg = Color(0xFFF1F5F9),
-    backButtonBg = Color(0xFFE2E8F0).copy(alpha = 0.8f),
-    backButtonBorder = Color(0xFFCBD5E1),
+    backgroundGradient = listOf(GrayF8FAFC, GrayF1F5F9),
+    cardBackground = Color.White,
+    cardBorder = GrayE2E8F0,
+    textPrimary = Blue0F172A,
+    textSecondary = Gray64748B,
+    topBarBg = Color.White,
+    bottomSheetBg = Color.White,
+    bottomSheetItemBg = GrayF1F5F9,
+    backButtonBg = GrayE2E8F0.copy(alpha = 0.8f),
+    backButtonBorder = GrayCBD5E1,
     isDark = false
 )
 
@@ -64,21 +64,21 @@ private val DarkColorScheme = darkColorScheme(
     primary = Purple80,
     secondary = PurpleGrey80,
     tertiary = Pink80,
-    background = Color(0xFF0A0814),
-    surface = Color(0xFF131B2E)
+    background = Black0A0814,
+    surface = Blue131B2E
 )
 
 private val LightColorScheme = lightColorScheme(
     primary = Purple40,
     secondary = PurpleGrey40,
     tertiary = Pink40,
-    background = Color(0xFFF8FAFC),
-    surface = Color(0xFFFFFFFF),
+    background = GrayF8FAFC,
+    surface = Color.White,
     onPrimary = Color.White,
     onSecondary = Color.White,
     onTertiary = Color.White,
-    onBackground = Color(0xFF0F172A),
-    onSurface = Color(0xFF0F172A)
+    onBackground = Blue0F172A,
+    onSurface = Blue0F172A
 )
 
 @Composable

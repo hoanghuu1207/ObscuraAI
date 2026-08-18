@@ -5,6 +5,9 @@ import com.techvertex.obscura.R
 import com.techvertex.obscura.core.datastore.DataStoreManager
 import com.techvertex.obscura.feature.intro.domain.model.IntroPage
 import com.techvertex.obscura.feature.intro.domain.repository.IntroRepository
+import com.techvertex.obscura.ui.theme.Blue00E5FF
+import com.techvertex.obscura.ui.theme.PinkEC4899
+import com.techvertex.obscura.ui.theme.Purple8B5CF6
 import javax.inject.Inject
 
 class IntroRepositoryImpl @Inject constructor(
@@ -18,7 +21,7 @@ class IntroRepositoryImpl @Inject constructor(
                 titlePrefix = "Smart AI ",
                 titleHighlight = "Face Detection",
                 description = "Automatically detect and track faces in your videos frame-by-frame.",
-                accentColor = Color(0xFF00E5FF), // Cyan
+                accentColor = Blue00E5FF, // Cyan
                 imageRes = R.drawable.img_intro_ai_detect
             ),
             IntroPage(
@@ -26,7 +29,7 @@ class IntroRepositoryImpl @Inject constructor(
                 titlePrefix = "Real-Time ",
                 titleHighlight = "Effects",
                 description = "Apply blur effects in real-time powered by high-performance rendering.",
-                accentColor = Color(0xFF8B5CF6), // Purple
+                accentColor = Purple8B5CF6, // Purple
                 imageRes = R.drawable.img_intro_effects
             ),
             IntroPage(
@@ -34,7 +37,7 @@ class IntroRepositoryImpl @Inject constructor(
                 titlePrefix = "100% On-Device ",
                 titleHighlight = "Privacy",
                 description = "All video processing stays locally on your device. Your media is never uploaded to any external server.",
-                accentColor = Color(0xFFEC4899), // Pink
+                accentColor = PinkEC4899, // Pink
                 imageRes = R.drawable.img_intro_privacy
             )
         )

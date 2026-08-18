@@ -54,6 +54,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.techvertex.obscura.R
 import com.techvertex.obscura.ui.theme.ObscuraCustomTheme
 import com.techvertex.obscura.ui.theme.Purple6366F1
+import com.techvertex.obscura.ui.theme.Purple8B5CF6
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -194,7 +195,7 @@ fun BlurVideoFeatureCard(
                 Brush.horizontalGradient(
                     colors = listOf(
                         Purple6366F1,
-                        Color(0xFF8B5CF6)
+                        Purple8B5CF6
                     )
                 )
             )

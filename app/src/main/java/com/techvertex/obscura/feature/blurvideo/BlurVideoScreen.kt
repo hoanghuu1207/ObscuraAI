@@ -82,6 +82,7 @@ import com.techvertex.obscura.ui.theme.Blue1E293B
 import com.techvertex.obscura.ui.theme.Gray334155
 import com.techvertex.obscura.ui.theme.Gray94A3B8
 import com.techvertex.obscura.ui.theme.Purple6366F1
+import com.techvertex.obscura.ui.theme.RedEF4444
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -640,7 +641,7 @@ fun BlurVideoScreen(
                     Spacer(modifier = Modifier.height(16.dp))
                     Text(
                         text = "Cancel",
-                        color = Color(0xFFEF4444),
+                        color = RedEF4444,
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Medium,
                         modifier = Modifier

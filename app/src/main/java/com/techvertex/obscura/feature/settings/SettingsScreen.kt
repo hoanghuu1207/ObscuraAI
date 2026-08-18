@@ -54,7 +54,9 @@ import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.techvertex.obscura.BuildConfig
 import com.techvertex.obscura.R
+import com.techvertex.obscura.ui.theme.Blue00E5FF
 import com.techvertex.obscura.ui.theme.ObscuraCustomTheme
+import com.techvertex.obscura.ui.theme.Purple8B5CF6
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -68,8 +70,8 @@ fun SettingsScreen(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val themeColors = ObscuraCustomTheme.colors
 
-    val cyanColor = Color(0xFF00E5FF)
-    val purpleColor = Color(0xFF8B5CF6)
+    val cyanColor = Blue00E5FF
+    val purpleColor = Purple8B5CF6
 
     Box(
         modifier = modifier
@@ -381,7 +383,7 @@ private fun LanguageSelectionBottomSheet(
     onDismiss: () -> Unit
 ) {
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
-    val cyanColor = Color(0xFF00E5FF)
+    val cyanColor = Blue00E5FF
     val themeColors = ObscuraCustomTheme.colors
 
     ModalBottomSheet(
@@ -494,7 +496,7 @@ private fun ThemeSelectionBottomSheet(
     onDismiss: () -> Unit
 ) {
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
-    val cyanColor = Color(0xFF00E5FF)
+    val cyanColor = Blue00E5FF
     val themeColors = ObscuraCustomTheme.colors
 
     ModalBottomSheet(
@@ -597,8 +599,8 @@ private fun ThemeSelectionBottomSheet(
 private fun PrivacyPolicyDialog(
     onDismiss: () -> Unit
 ) {
-    val cyanColor = Color(0xFF00E5FF)
-    val purpleColor = Color(0xFF8B5CF6)
+    val cyanColor = Blue00E5FF
+    val purpleColor = Purple8B5CF6
     val themeColors = ObscuraCustomTheme.colors
 
     Dialog(onDismissRequest = onDismiss) {
@@ -687,8 +689,8 @@ private fun PrivacyPolicyDialog(
 private fun AboutObscuraDialog(
     onDismiss: () -> Unit
 ) {
-    val cyanColor = Color(0xFF00E5FF)
-    val purpleColor = Color(0xFF8B5CF6)
+    val cyanColor = Blue00E5FF
+    val purpleColor = Purple8B5CF6
     val themeColors = ObscuraCustomTheme.colors
 
     Dialog(onDismissRequest = onDismiss) {
