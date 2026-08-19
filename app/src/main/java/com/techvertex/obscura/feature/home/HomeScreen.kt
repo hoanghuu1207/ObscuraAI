@@ -52,9 +52,9 @@ import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.techvertex.obscura.R
-import com.techvertex.obscura.ui.theme.Blue0F172A
-import com.techvertex.obscura.ui.theme.Blue1E293B
+import com.techvertex.obscura.ui.theme.ObscuraCustomTheme
 import com.techvertex.obscura.ui.theme.Purple6366F1
+import com.techvertex.obscura.ui.theme.Purple8B5CF6
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -67,6 +67,7 @@ fun HomeScreen(
 ) {
     val context = LocalContext.current
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val themeColors = ObscuraCustomTheme.colors
 
     // Request Notification Permission on Android 13+ if not granted
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -102,18 +103,18 @@ fun HomeScreen(
                     Text(
                         text = stringResource(R.string.app_name),
                         fontWeight = FontWeight.Bold,
-                        color = Color.White
+                        color = themeColors.textPrimary
                     )
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Blue0F172A
+                    containerColor = themeColors.topBarBg
                 ),
                 actions = {
                     IconButton(onClick = onNavigateToSettings) {
                         Icon(
                             imageVector = Icons.Default.Settings,
                             contentDescription = "Settings",
-                            tint = Color.White
+                            tint = themeColors.textPrimary
                         )
                     }
                 }
@@ -126,10 +127,7 @@ fun HomeScreen(
                 .padding(innerPadding)
                 .background(
                     Brush.verticalGradient(
-                        colors = listOf(
-                            Blue0F172A,
-                            Blue1E293B
-                        )
+                        colors = themeColors.backgroundGradient
                     )
                 ),
             contentAlignment = Alignment.Center
@@ -197,7 +195,7 @@ fun BlurVideoFeatureCard(
                 Brush.horizontalGradient(
                     colors = listOf(
                         Purple6366F1,
-                        Color(0xFF8B5CF6)
+                        Purple8B5CF6
                     )
                 )
             )
