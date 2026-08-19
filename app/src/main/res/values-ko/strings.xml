@@ -23,4 +23,11 @@
     <string name="app_version_developer_techvertex">%1$s 앱\n버전: %2$s\n개발자: TechVertex</string>
     <string name="blur_video">비디오 블러</string>
     <string name="pick_a_video_apply_blur_effects"><![CDATA[비디오를 선택하고 블러 효과를 적용하세요]]></string>
+    <string name="skip">건너뛰기</string>
+    <string name="next">다음</string>
+    <string name="secure_local_face_blur">안전한 로컬 얼굴 블러</string>
+    <string name="choose_your_preferred_interface_language">선호하는 인터페이스 언어를 선택하세요</string>
+    <string name="personalize_your_workspace_experience">워크스페이스 환경을 맞춤 설정하세요</string>
+    <string name="secure_on_device"><![CDATA[보안 & 기기 내 처리]]></string>
+    <string name="app_information">앱 정보</string>
 </resources>

@@ -23,4 +23,11 @@
     <string name="app_version_developer_techvertex">Aplicativo %1$s\nVersão: %2$s\nDesenvolvedor: TechVertex</string>
     <string name="blur_video">Desfocar Vídeo</string>
     <string name="pick_a_video_apply_blur_effects"><![CDATA[Escolha um vídeo & aplique efeitos de desfoque]]></string>
+    <string name="skip">Pular</string>
+    <string name="next">Próximo</string>
+    <string name="secure_local_face_blur">Desfoque Facial Local Seguro</string>
+    <string name="choose_your_preferred_interface_language">Escolha seu idioma de interface preferido</string>
+    <string name="personalize_your_workspace_experience">Personalize sua experiência de espaço de trabalho</string>
+    <string name="secure_on_device"><![CDATA[Seguro & No Dispositivo]]></string>
+    <string name="app_information">Informações do Aplicativo</string>
 </resources>

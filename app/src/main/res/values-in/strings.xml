@@ -23,4 +23,11 @@
     <string name="app_version_developer_techvertex">Aplikasi %1$s\nVersi: %2$s\nPengembang: TechVertex</string>
     <string name="blur_video">Kaburkan Video</string>
     <string name="pick_a_video_apply_blur_effects"><![CDATA[Pilih video & terapkan efek buram]]></string>
+    <string name="skip">Lewati</string>
+    <string name="next">Lanjut</string>
+    <string name="secure_local_face_blur">Buram Wajah Lokal Aman</string>
+    <string name="choose_your_preferred_interface_language">Pilih bahasa antarmuka pilihan Anda</string>
+    <string name="personalize_your_workspace_experience">Personalisasi pengalaman ruang kerja Anda</string>
+    <string name="secure_on_device"><![CDATA[Aman & Di Perangkat]]></string>
+    <string name="app_information">Informasi Aplikasi</string>
 </resources>

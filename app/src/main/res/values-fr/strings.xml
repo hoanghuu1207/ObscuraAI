@@ -23,4 +23,11 @@
     <string name="app_version_developer_techvertex">Application %1$s\nVersion: %2$s\nDéveloppeur: TechVertex</string>
     <string name="blur_video">Flouter la vidéo</string>
     <string name="pick_a_video_apply_blur_effects"><![CDATA[Choisissez une vidéo & appliquez des effets de flou]]></string>
+    <string name="skip">Passer</string>
+    <string name="next">Suivant</string>
+    <string name="secure_local_face_blur">Flou de visage local sécurisé</string>
+    <string name="choose_your_preferred_interface_language">Choisissez votre langue d\'interface préférée</string>
+    <string name="personalize_your_workspace_experience">Personnalisez votre expérience d\'espace de travail</string>
+    <string name="secure_on_device"><![CDATA[Sécurisé & Sur l\'appareil]]></string>
+    <string name="app_information">Informations sur l\'application</string>
 </resources>

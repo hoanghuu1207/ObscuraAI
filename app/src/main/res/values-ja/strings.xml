@@ -23,4 +23,11 @@
     <string name="app_version_developer_techvertex">%1$s アプリ\nバージョン: %2$s\n開発元: TechVertex</string>
     <string name="blur_video">動画ぼかし</string>
     <string name="pick_a_video_apply_blur_effects"><![CDATA[動画を選択してぼかしエフェクトを適用]]></string>
+    <string name="skip">スキップ</string>
+    <string name="next">次へ</string>
+    <string name="secure_local_face_blur">安全なローカル顔ぼかし</string>
+    <string name="choose_your_preferred_interface_language">希望するインターフェース言語を選択してください</string>
+    <string name="personalize_your_workspace_experience">ワークスペース体験をカスタマイズ</string>
+    <string name="secure_on_device"><![CDATA[安全・デバイス上処理]]></string>
+    <string name="app_information">アプリ情報</string>
 </resources>
