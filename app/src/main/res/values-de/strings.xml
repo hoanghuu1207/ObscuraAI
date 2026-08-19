@@ -23,4 +23,11 @@
     <string name="app_version_developer_techvertex">%1$s App\nVersion: %2$s\nEntwickler: TechVertex</string>
     <string name="blur_video">Video Weichzeichnen</string>
     <string name="pick_a_video_apply_blur_effects"><![CDATA[Wählen Sie ein Video & wenden Sie Weichzeichner-Effekte an]]></string>
+    <string name="skip">Überspringen</string>
+    <string name="next">Weiter</string>
+    <string name="secure_local_face_blur">Sichere lokale Gesichtsunschärfe</string>
+    <string name="choose_your_preferred_interface_language">Wählen Sie Ihre bevorzugte Sprache für die Benutzeroberfläche</string>
+    <string name="personalize_your_workspace_experience">Personalisieren Sie Ihr Arbeitsbereich-Erlebnis</string>
+    <string name="secure_on_device"><![CDATA[Sicher & Auf dem Gerät]]></string>
+    <string name="app_information">App-Informationen</string>
 </resources>

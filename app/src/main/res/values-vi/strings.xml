@@ -23,4 +23,11 @@
     <string name="app_version_developer_techvertex">Ứng dụng %1$s\nPhiên bản: %2$s\nNhà phát triển: TechVertex</string>
     <string name="blur_video">Làm mờ Video</string>
     <string name="pick_a_video_apply_blur_effects"><![CDATA[Chọn video & áp dụng hiệu ứng làm mờ]]></string>
+    <string name="skip">Bỏ qua</string>
+    <string name="next">Tiếp theo</string>
+    <string name="secure_local_face_blur">Làm mờ khuôn mặt cục bộ an toàn</string>
+    <string name="choose_your_preferred_interface_language">Chọn ngôn ngữ giao diện ưu tiên của bạn</string>
+    <string name="personalize_your_workspace_experience">Cá nhân hóa trải nghiệm không gian làm việc của bạn</string>
+    <string name="secure_on_device"><![CDATA[An toàn & Trên thiết bị]]></string>
+    <string name="app_information">Thông tin ứng dụng</string>
 </resources>
