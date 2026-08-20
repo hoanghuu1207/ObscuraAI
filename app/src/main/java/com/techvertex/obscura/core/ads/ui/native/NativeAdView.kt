@@ -40,7 +40,7 @@ import com.google.android.libraries.ads.mobile.sdk.nativead.NativeAdView as Goog
 fun NativeAdView(
     adManager: AdManager,
     modifier: Modifier = Modifier,
-    adUnitId: String = AdConstants.DEFAULT_NATIVE_ID,
+    adUnitId: String = adManager.getNativeAdUnitId(),
     showMediaContent: Boolean = false
 ) {
     val isAdEnabled by adManager.isAdEnabled().collectAsState(initial = true)

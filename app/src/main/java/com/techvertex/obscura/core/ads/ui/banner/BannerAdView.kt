@@ -14,7 +14,6 @@ import com.google.android.libraries.ads.mobile.sdk.banner.BannerAd
 import com.google.android.libraries.ads.mobile.sdk.banner.BannerAdRequest
 import com.google.android.libraries.ads.mobile.sdk.common.AdLoadCallback
 import com.google.android.libraries.ads.mobile.sdk.common.LoadAdError
-import com.techvertex.obscura.core.ads.data.config.AdConstants
 import com.techvertex.obscura.core.ads.domain.repository.AdManager
 
 const val TAG = "BannerAd"
@@ -23,7 +22,7 @@ const val TAG = "BannerAd"
 fun BannerAdView(
     adManager: AdManager,
     modifier: Modifier = Modifier,
-    adUnitId: String = AdConstants.DEFAULT_BANNER_ID
+    adUnitId: String = adManager.getBannerAdUnitId()
 ) {
     val isAdEnabled by adManager.isAdEnabled().collectAsState(initial = true)
     if (!isAdEnabled) return

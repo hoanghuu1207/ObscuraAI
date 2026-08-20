@@ -8,9 +8,11 @@ import kotlinx.coroutines.flow.Flow
 interface AdManager {
     fun initialize(context: Context)
     fun isAdEnabled(): Flow<Boolean>
+    fun getBannerAdUnitId(): String
+    fun getNativeAdUnitId(): String
     fun loadNativeAd(
         context: Context,
-        adUnitId: String,
+        adUnitId: String = getNativeAdUnitId(),
         onResult: (AdState<NativeAdData>) -> Unit
     )
 }

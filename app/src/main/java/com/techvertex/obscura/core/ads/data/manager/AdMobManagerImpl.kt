@@ -8,6 +8,8 @@ import com.google.android.libraries.ads.mobile.sdk.nativead.NativeAd
 import com.google.android.libraries.ads.mobile.sdk.nativead.NativeAdLoader
 import com.google.android.libraries.ads.mobile.sdk.nativead.NativeAdLoaderCallback
 import com.google.android.libraries.ads.mobile.sdk.nativead.NativeAdRequest
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig
+import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
 import com.techvertex.obscura.core.ads.data.config.AdConstants
 import com.techvertex.obscura.core.ads.data.mapper.NativeAdMapper
 import com.techvertex.obscura.core.ads.domain.model.AdState
@@ -17,7 +19,8 @@ import com.techvertex.obscura.core.datastore.DataStoreManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -28,6 +31,8 @@ class AdMobManagerImpl @Inject constructor(
 ) : AdManager {
 
     private var isInitialized = false
+    private val remoteConfig: FirebaseRemoteConfig by lazy { FirebaseRemoteConfig.getInstance() }
+    private val isRemoteAdsEnabled = MutableStateFlow(true)
 
     override fun initialize(context: Context) {
         if (isInitialized) return
@@ -39,11 +44,53 @@ class AdMobManagerImpl @Inject constructor(
             ) {
                 isInitialized = true
             }
+
+            setupRemoteConfig()
+        }
+    }
+
+    private fun setupRemoteConfig() {
+        try {
+            val defaultsMap = mapOf(
+                AdConstants.KEY_BANNER_AD_UNIT_ID to AdConstants.TEST_BANNER_AD_UNIT_ID,
+                AdConstants.KEY_NATIVE_AD_UNIT_ID to AdConstants.TEST_NATIVE_AD_UNIT_ID,
+                AdConstants.KEY_IS_ADS_ENABLED to true
+            )
+            remoteConfig.setDefaultsAsync(defaultsMap)
+
+            val configSettings = FirebaseRemoteConfigSettings.Builder()
+                .setMinimumFetchIntervalInSeconds(0)
+                .build()
+            remoteConfig.setConfigSettingsAsync(configSettings)
+
+            remoteConfig.fetchAndActivate().addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    val enabled = remoteConfig.getBoolean(AdConstants.KEY_IS_ADS_ENABLED)
+                    isRemoteAdsEnabled.value = enabled
+                }
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 
     override fun isAdEnabled(): Flow<Boolean> {
-        return dataStoreManager.isPremium.map { isPremium -> !isPremium }
+        return combine(
+            dataStoreManager.isPremium,
+            isRemoteAdsEnabled
+        ) { isPremium, isRemoteEnabled ->
+            !isPremium && isRemoteEnabled
+        }
+    }
+
+    override fun getBannerAdUnitId(): String {
+        val fetchedId = remoteConfig.getString(AdConstants.KEY_BANNER_AD_UNIT_ID)
+        return fetchedId.ifBlank { AdConstants.DEFAULT_BANNER_ID }
+    }
+
+    override fun getNativeAdUnitId(): String {
+        val fetchedId = remoteConfig.getString(AdConstants.KEY_NATIVE_AD_UNIT_ID)
+        return fetchedId.ifBlank { AdConstants.DEFAULT_NATIVE_ID }
     }
 
     override fun loadNativeAd(
@@ -51,10 +98,11 @@ class AdMobManagerImpl @Inject constructor(
         adUnitId: String,
         onResult: (AdState<NativeAdData>) -> Unit
     ) {
+        val targetAdUnitId = adUnitId.ifBlank { getNativeAdUnitId() }
         onResult(AdState.Loading)
 
         val adRequest = NativeAdRequest
-            .Builder(adUnitId, listOf(NativeAd.NativeAdType.NATIVE))
+            .Builder(targetAdUnitId, listOf(NativeAd.NativeAdType.NATIVE))
             .build()
 
         val adCallback = object : NativeAdLoaderCallback {

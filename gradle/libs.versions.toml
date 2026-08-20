@@ -29,6 +29,7 @@ firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.r
 firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics" }
 firebase-crashlytics = { group = "com.google.firebase", name = "firebase-crashlytics" }
 firebase-messaging = { group = "com.google.firebase", name = "firebase-messaging" }
+firebase-config = { group = "com.google.firebase", name = "firebase-config" }
 lottie-compose = { module = "com.airbnb.android:lottie-compose", version.ref = "lottieCompose" }
 mlkit-face-detection = { group = "com.google.mlkit", name = "face-detection", version.ref = "mlkit-face-detection" }
 androidx-media3-exoplayer = { group = "androidx.media3", name = "media3-exoplayer", version.ref = "media3" }

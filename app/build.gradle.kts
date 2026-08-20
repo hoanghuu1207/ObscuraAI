@@ -113,6 +113,7 @@ dependencies {
     implementation(libs.firebase.analytics)
     implementation(libs.firebase.crashlytics)
     implementation(libs.firebase.messaging)
+    implementation(libs.firebase.config)
 
     // Ads (Google Ads Mobile SDK)
     implementation(libs.ads.mobile.sdk)
