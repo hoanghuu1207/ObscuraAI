@@ -10,6 +10,7 @@ import com.google.android.libraries.ads.mobile.sdk.nativead.NativeAdLoaderCallba
 import com.google.android.libraries.ads.mobile.sdk.nativead.NativeAdRequest
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
+import com.techvertex.obscura.R
 import com.techvertex.obscura.core.ads.data.config.AdConstants
 import com.techvertex.obscura.core.ads.data.mapper.NativeAdMapper
 import com.techvertex.obscura.core.ads.domain.model.AdState
@@ -51,12 +52,7 @@ class AdMobManagerImpl @Inject constructor(
 
     private fun setupRemoteConfig() {
         try {
-            val defaultsMap = mapOf(
-                AdConstants.KEY_BANNER_AD_UNIT_ID to AdConstants.TEST_BANNER_AD_UNIT_ID,
-                AdConstants.KEY_NATIVE_AD_UNIT_ID to AdConstants.TEST_NATIVE_AD_UNIT_ID,
-                AdConstants.KEY_IS_ADS_ENABLED to true
-            )
-            remoteConfig.setDefaultsAsync(defaultsMap)
+            remoteConfig.setDefaultsAsync(R.xml.remote_config_defaults)
 
             val configSettings = FirebaseRemoteConfigSettings.Builder()
                 .setMinimumFetchIntervalInSeconds(0)
