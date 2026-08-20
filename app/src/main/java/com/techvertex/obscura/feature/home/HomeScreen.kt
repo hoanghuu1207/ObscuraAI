@@ -52,6 +52,8 @@ import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.techvertex.obscura.R
+import com.techvertex.obscura.core.ads.ui.banner.BannerAdView
+import com.techvertex.obscura.core.ads.ui.native.NativeAdView
 import com.techvertex.obscura.ui.theme.ObscuraCustomTheme
 import com.techvertex.obscura.ui.theme.Purple6366F1
 import com.techvertex.obscura.ui.theme.Purple8B5CF6
@@ -119,6 +121,9 @@ fun HomeScreen(
                     }
                 }
             )
+        },
+        bottomBar = {
+            BannerAdView(adManager = viewModel.adManager)
         }
     ) { innerPadding ->
         Box(
@@ -174,6 +179,12 @@ fun HomeScreen(
                                 )
                             }
                         )
+
+                        Spacer(modifier = Modifier.height(16.dp))
+
+                        // Render Native Ad
+                        NativeAdView(adManager = viewModel.adManager, showMediaContent = true)
+
                         Spacer(modifier = Modifier.height(16.dp))
                     }
                 }
