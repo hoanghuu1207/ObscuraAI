@@ -48,7 +48,7 @@ class MainActivity : ComponentActivity() {
             val themeMode by dataStoreManager.themeMode.collectAsState(initial = DARK)
 
             ObscuraTheme(themeMode = themeMode) {
-                AppNavHost()
+                AppNavHost(adManager = adManager)
             }
         }
     }
