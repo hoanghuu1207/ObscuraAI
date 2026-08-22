@@ -82,6 +82,9 @@ import com.techvertex.obscura.ui.theme.Blue1E293B
 import com.techvertex.obscura.ui.theme.Gray334155
 import com.techvertex.obscura.ui.theme.Gray94A3B8
 import com.techvertex.obscura.ui.theme.Purple6366F1
+import android.app.Activity
+import android.content.ContextWrapper
+import com.techvertex.obscura.core.ads.domain.repository.AdManager
 import com.techvertex.obscura.ui.theme.RedEF4444
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -89,6 +92,7 @@ import com.techvertex.obscura.ui.theme.RedEF4444
 fun BlurVideoScreen(
     videoUriStr: String,
     viewModel: BlurVideoViewModel,
+    adManager: AdManager,
     onNavigateBack: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -100,12 +104,23 @@ fun BlurVideoScreen(
     var glSurfaceView by remember { mutableStateOf<BlurVideoGLSurfaceView?>(null) }
     var draggableFrameView by remember { mutableStateOf<DraggableFrameView?>(null) }
 
+    val performExport = {
+        val activity = context.findActivity()
+        if (activity != null) {
+            adManager.showRewardedAd(activity) {
+                viewModel.startExport(context, videoUri)
+            }
+        } else {
+            viewModel.startExport(context, videoUri)
+        }
+    }
+
     // Storage permission launcher for API < 29
     val storagePermissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission()
     ) { isGranted ->
         if (isGranted) {
-            viewModel.startExport(context, videoUri)
+            performExport()
         } else {
             Toast.makeText(
                 context,
@@ -122,7 +137,7 @@ fun BlurVideoScreen(
                 Manifest.permission.WRITE_EXTERNAL_STORAGE
             ) == PackageManager.PERMISSION_GRANTED
         ) {
-            viewModel.startExport(context, videoUri)
+            performExport()
         } else {
             storagePermissionLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE)
         }
@@ -742,4 +757,13 @@ fun TabItemButton(
             fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium
         )
     }
+}
+
+fun android.content.Context.findActivity(): Activity? {
+    var context = this
+    while (context is ContextWrapper) {
+        if (context is Activity) return context
+        context = context.baseContext
+    }
+    return null
 }

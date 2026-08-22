@@ -21,6 +21,8 @@ import com.techvertex.obscura.feature.splash.SplashViewModel
 import com.techvertex.obscura.feature.settings.SettingsScreen
 import com.techvertex.obscura.feature.settings.SettingsViewModel
 
+import com.techvertex.obscura.core.ads.domain.repository.AdManager
+
 sealed class Screen(val route: String) {
     data object Splash : Screen("splash")
     data object Intro : Screen("intro")
@@ -34,6 +36,7 @@ sealed class Screen(val route: String) {
 
 @Composable
 fun AppNavHost(
+    adManager: AdManager,
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
     startDestination: String = Screen.Splash.route
@@ -112,6 +115,7 @@ fun AppNavHost(
             BlurVideoScreen(
                 videoUriStr = videoUriStr,
                 viewModel = blurVideoViewModel,
+                adManager = adManager,
                 onNavigateBack = {
                     navController.popBackStack()
                 }

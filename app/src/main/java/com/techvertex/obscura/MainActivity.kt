@@ -13,6 +13,7 @@ import androidx.compose.runtime.getValue
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.lifecycleScope
+import com.techvertex.obscura.core.ads.domain.repository.AdManager
 import com.techvertex.obscura.core.datastore.DataStoreManager
 import com.techvertex.obscura.navigation.AppNavHost
 import com.techvertex.obscura.ui.theme.ObscuraTheme
@@ -28,8 +29,12 @@ class MainActivity : ComponentActivity() {
     @Inject
     lateinit var dataStoreManager: DataStoreManager
 
+    @Inject
+    lateinit var adManager: AdManager
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        adManager.initialize(this)
 
         lifecycleScope.launch {
             val savedCode = dataStoreManager.languageCode.firstOrNull() ?: "en"
@@ -43,7 +48,7 @@ class MainActivity : ComponentActivity() {
             val themeMode by dataStoreManager.themeMode.collectAsState(initial = DARK)
 
             ObscuraTheme(themeMode = themeMode) {
-                AppNavHost()
+                AppNavHost(adManager = adManager)
             }
         }
     }

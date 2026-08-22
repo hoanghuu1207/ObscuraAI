@@ -25,6 +25,7 @@ class DataStoreManager @Inject constructor(
         val KEY_IS_PASS_INTRO = booleanPreferencesKey("is_pass_intro")
         val KEY_LANGUAGE_CODE = stringPreferencesKey("language_code")
         val KEY_THEME_MODE = stringPreferencesKey("theme_mode")
+        val KEY_IS_PREMIUM = booleanPreferencesKey("is_premium")
     }
 
     /**
@@ -159,5 +160,11 @@ class DataStoreManager @Inject constructor(
 
     suspend fun saveLanguageCode(code: String) {
         saveString(KEY_LANGUAGE_CODE, code)
+    }
+
+    val isPremium: Flow<Boolean> = getBoolean(KEY_IS_PREMIUM, false)
+
+    suspend fun setIsPremium(value: Boolean) {
+        saveBoolean(KEY_IS_PREMIUM, value)
     }
 }

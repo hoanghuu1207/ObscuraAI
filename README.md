@@ -5,7 +5,7 @@
 </p>
 
 <p align="center">
-  <b>A modern, high-performance Android Video Blur & Auto Face Tracking application powered by Jetpack Compose, OpenGL ES 2.0, Google ML Kit, and Firebase Cloud Messaging.</b>
+  <b>A modern, high-performance Android Video Blur & Auto Face Tracking application powered by Jetpack Compose, OpenGL ES 2.0, Google ML Kit, Google Mobile Ads Next-Gen SDK, and Firebase Cloud Messaging.</b>
 </p>
 
 <p align="center">
@@ -14,6 +14,7 @@
   <a href="https://developer.android.com/jetpack/compose"><img src="https://img.shields.io/badge/UI-Jetpack%20Compose-4285F4.svg" alt="Jetpack Compose" /></a>
   <a href="https://developer.android.com/training/graphics/opengl"><img src="https://img.shields.io/badge/Graphics-OpenGL%20ES%202.0-orange.svg" alt="OpenGL ES 2.0" /></a>
   <a href="https://developers.google.com/ml-kit"><img src="https://img.shields.io/badge/AI-Google%20ML%20Kit-red.svg" alt="Google ML Kit" /></a>
+  <a href="https://developers.google.com/admob/android/next-gen/quick-start"><img src="https://img.shields.io/badge/Monetization-AdMob%20Next--Gen-green.svg" alt="AdMob Next-Gen SDK" /></a>
   <a href="https://firebase.google.com/docs/cloud-messaging"><img src="https://img.shields.io/badge/Push-Firebase%20FCM-FFCA28.svg" alt="Firebase FCM" /></a>
   <a href="#-localization"><img src="https://img.shields.io/badge/Languages-10%2B%20Locales-purple.svg" alt="10+ Languages" /></a>
 </p>
@@ -21,6 +22,11 @@
 ---
 
 ## Key Features
+
+### Google Mobile Ads (GMA) Next-Gen SDK & Remote Config
+- **Next-Gen SDK (`1.3.1`) Integration**: Clean Architecture `core/ads` module supporting **Banner**, **Native** (small format with 2-line body limit & optional `MediaView`), and **Rewarded Ads**.
+- **Preloaded Rewarded Export Gate**: Rewarded Ads are preloaded on app startup (`MainActivity`) and presented prior to video export (`BlurVideoScreen`). Includes smooth fallback logic if ad loading fails.
+- **Firebase Remote Config Management**: Ad Unit IDs (`banner_ad_unit_id`, `native_ad_unit_id`, `rewarded_ad_unit_id`) and global kill-switch (`is_ads_enabled`) managed remotely with `res/xml/remote_config_defaults.xml` fallbacks.
 
 ### Firebase Cloud Messaging (FCM) Push Notifications
 - **Custom Messaging Service (`ObscuraFirebaseMessagingService`)**: Handles push notification payloads and data triggers in background & foreground states.
@@ -69,6 +75,11 @@ The project strictly follows **Clean Architecture** principles with **MVI (Model
 BlurVision/
 ├── app/src/main/java/com/techvertex/obscura/
 │   ├── core/
+│   │   ├── ads/             # Google Mobile Ads Next-Gen SDK module
+│   │   │   ├── config/      # AdConstants
+│   │   │   ├── data/        # AdMobManagerImpl & NativeAdMapper
+│   │   │   ├── domain/      # AdManager repository interface & models
+│   │   │   └── ui/          # BannerAdView & NativeAdView Compose components
 │   │   ├── datastore/       # DataStore preferences
 │   │   ├── notification/    # FirebaseMessagingService & FCM Channel
 │   │   └── video/           # Core video processing engine
@@ -100,6 +111,8 @@ BlurVision/
 | **Video Playback** | [AndroidX Media3 (ExoPlayer)](https://developer.android.com/guide/topics/media/media3) | Frame decoding to SurfaceTexture |
 | **Graphics & Shaders** | OpenGL ES 2.0 + EGL14 | Custom GLSL fragment & vertex shaders |
 | **On-Device AI** | [Google ML Kit Face Detection](https://developers.google.com/ml-kit/vision/face-detection) | High-speed face scanning & tracking |
+| **Monetization & Ads** | [AdMob Next-Gen SDK 1.3.1](https://developers.google.com/admob/android/next-gen/quick-start) | Banner, Native, and Rewarded Ads |
+| **Remote Configuration** | [Firebase Remote Config](https://firebase.google.com/docs/remote-config) | Dynamic Ad Unit IDs & remote feature flags |
 | **Push Notifications** | [Firebase Cloud Messaging (FCM)](https://firebase.google.com/docs/cloud-messaging) | Push notifications & token lifecycle |
 | **Storage & State** | Jetpack DataStore Preferences | Reactive settings & state persistence |
 | **Telemetry & Crash** | Firebase Analytics & Crashlytics | Real-time crash monitoring |
